@@ -1,18 +1,30 @@
 const { app, BrowserWindow, ipcMain } = require('electron')
+const express = require('./src/back-end/server')
 const path = require('path')
+const { PORT } = require('./src/utils')
 
 app.whenReady().then(() => {
-
     const window = new BrowserWindow({
         height: 600,
-        width: 800,
+        width: 800, 
+        // autoHideMenuBar: true,
+        // useContentSize: true,
+        // resizable: false,
         webPreferences: {
             nodeIntegration: true,
             preload: path.join(__dirname, 'preload.js')
+        }, 
+        "build": {
+            "extraResources": [
+              {
+                "from": "public",
+                "to": ""
+              }
+            ]
         }
     })
     
-    window.loadFile('src/pages/index.html')
+    window.loadURL(`http://localhost:${PORT}`)
 
 
 })

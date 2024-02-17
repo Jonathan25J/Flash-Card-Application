@@ -1,5 +1,5 @@
 const {contextBridge, ipcRenderer } = require('electron')
 
 contextBridge.exposeInMainWorld('api', {
-    title: "Sheets Application"
+    title: "Flash Cards Application"
 })

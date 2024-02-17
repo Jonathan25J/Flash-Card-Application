@@ -1,10 +1,11 @@
 {
-  "name": "sheets-application",
+  "name": "flash-cards-application",
   "version": "1.0.0",
   "description": "",
   "main": "main.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "server": "node src/back-end/server"
   },
   "keywords": [],
   "author": "",
@@ -12,5 +13,9 @@
   "devDependencies": {
     "electron": "^28.2.3",
     "electron-packager": "^17.1.2"
+  },
+  "dependencies": {
+    "ejs": "^3.1.9",
+    "express": "^4.18.2"
   }
 }
