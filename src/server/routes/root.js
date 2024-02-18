@@ -1,11 +1,8 @@
-const express = require('express')
-const router = express.Router()
-const electron = require('electron');
-const fs = require('fs');
-const path = require('path')
+import { Router } from 'express';
+const router = Router()
 
 router.get('/', (req, res) => {
-    res.render(path.join(__dirname, '../../front-end/pages/index.html'))
+    res.render('index.html')
 })
 
 // router.get('/writeFile', (req, res) => {
@@ -24,4 +21,4 @@ router.get('/', (req, res) => {
 //     });
 //   });
 
-module.exports = router
+export default router
