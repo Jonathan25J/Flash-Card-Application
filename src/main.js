@@ -1,4 +1,4 @@
-import { spawn } from 'child_process';
+import { fork } from 'child_process';
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { PORT } from './utils/port.js';
@@ -24,8 +24,11 @@ app.whenReady().then(() => {
         }
     })
 
-    const serverProcess = spawn('node', [path.join(path.resolve(), 'src/server/server.js')],
-    )
+    const serverProcess = fork(path.join(path.resolve(), 'src/server/server.js'), [])
+
+    serverProcess.on('data', (data) => {
+        console.log(`Child stdout: ${data}`);
+      });
 
     serverProcess.on('error', (err) => {
         console.error('Failed to start server process:', err);
