@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "nodemon --watch . --exec electron .",
-    "start trace": "electron --trace-warnings .",
+    "trace": "electron --trace-warnings .",
     "server": "node src/server/server"
   },
   "keywords": [],
