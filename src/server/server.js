@@ -9,7 +9,7 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 })
 
-app.set('views', path.join(path.resolve(), 'public/views'));
+app.set('views', path.join(path.resolve(), 'src/server/views'));
 app.use(express.static("public"))
 app.use(express.urlencoded({ extended: true }))
 app.set('view engine', 'html');
