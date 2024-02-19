@@ -1,0 +1,11 @@
+.profiles {
+    display: flex;
+    justify-content: center;
+    margin: 2.5rem;
+}
+
+profiles-holder {
+    display: block;
+    width: 80%;
+    height: 10rem;
+}

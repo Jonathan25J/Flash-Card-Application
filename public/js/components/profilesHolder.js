@@ -36,6 +36,8 @@ export class ProfilesHolder extends LitElement {
         .container {
             height: 100%;
             width: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 0.5rem;
         }
     `
     }
