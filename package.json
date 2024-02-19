@@ -7,7 +7,7 @@
   "scripts": {
     "start": "nodemon --watch . --exec electron .",
     "trace": "electron --trace-warnings .",
-    "server": "node src/server/server"
+    "server": "nodemon --watch . --exec node src/server/server"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
   "dependencies": {
     "ejs": "^3.1.9",
     "express": "^4.18.2",
-    "lit": "^3.1.2"
+    "lit": "^3.1.2",
+    "reload": "^3.2.1"
   }
 }

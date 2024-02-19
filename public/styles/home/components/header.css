@@ -1,0 +1,9 @@
+.header {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--foreground-color);
+    font-family: 'Courier New', monospace;
+    padding-top: 0.5rem;
+}

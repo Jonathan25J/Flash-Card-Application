@@ -4,21 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/index.css">
-    <script type="module" src="/js/index.js"></script>
+    <link rel="stylesheet" href="styles/theme.css">
+    <link rel="stylesheet" href="styles/home/index.css">
+    <script type="module" src="js/home/index.js"></script>
     <title>Main page</title>
 </head>
-
-<nav>
-    <ul>
-        <li><a class="active" href="#home">Home</a></li>
-        <li><a href="#news">News</a></li>
-        <li><a href="#contact">Contact</a></li>
-    </ul>
-</nav>
-
 <body>
-    <button id="btn" type="button">Set</button>
+    <header class="header container">
+        <p>Profiles</p>
+    </header>
+    <main>
+        <section class="profiles container">
+            <profiles-holder></profiles-holder>
+        </section>
+    </main>
+    <script src="/reload/reload.js"></script>
 </body>
 
 </html>
