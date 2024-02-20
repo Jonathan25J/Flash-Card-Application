@@ -9,7 +9,7 @@
     "start": "electron-forge start",
     "trace": "electron --trace-warnings .",
     "server": "nodemon --watch . --ignore resources/website --exec \"npm run build && node src/server/server\"",
-    "clean": "rimraf build",
+    "clean": "rimraf resources/website",
     "build": "npm run clean && rollup -c",
     "package": "electron-forge package",
     "make": "electron-forge make"

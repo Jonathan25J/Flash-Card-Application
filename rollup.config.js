@@ -30,14 +30,16 @@ export default {
                     url: "inline", // enable inline assets using base64 encoding
                     maxSize: 10, // maximum file size to inline (in kilobytes)
                     fallback: "copy", // fallback method to use if max size is exceeded
-                }),
+                }, ),
             ]
         }),
         // Optional: copy any static assets to build directory
         copy()
     ],
     output: {
-        dir: path.join(path.resolve(), 'resources/website')
+        dir: path.join(path.resolve(), 'resources/website'),
+        entryFileNames: 'js/[name]-[hash].js',
+        assetFileNames: 'styles/[name]-[hash].css'
     },
     preserveEntrySignatures: 'strict',
 };
