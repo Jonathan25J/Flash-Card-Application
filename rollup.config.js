@@ -39,6 +39,7 @@ export default {
     output: {
         dir: path.join(path.resolve(), 'resources/website'),
         entryFileNames: 'js/[name]-[hash].js',
+        chunkFileNames: 'js/[name]-[hash].js',
         assetFileNames: 'styles/[name]-[hash].css'
     },
     preserveEntrySignatures: 'strict',
