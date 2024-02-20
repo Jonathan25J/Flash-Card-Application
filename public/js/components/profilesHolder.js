@@ -46,21 +46,30 @@ export class ProfilesHolder extends LitElement {
     _showModal(e) {
         e.preventDefault();
         const modal = document.createElement('modal-widget')
-        modal.setContent(this._createForm())
+        modal.setContent("create profile", this._createForm())
         document.body.append(modal)
     }
 
-    _addProfile() {
+    _addProfile(title, description) {
+        if (title.trim().length === 0) {
+            document.body.removeChild(document.querySelector('modal-widget'))
+            return
+        }
         const profile = document.createElement('profile-widget');
-        profile.setAttribute('title', 'Jonathan');
-        console.log(this.profiles)
+        profile.setAttribute('title', title);
+        profile.setAttribute('description', description);
+        document.body.removeChild(document.querySelector('modal-widget'))
         return this.profiles = [...this.profiles, profile]
     }
 
     _createForm() {
         return html`
-        <form class="modal-form">
-        <label for="title">Title</label><br>
+        <form class="basic" @submit="${(e) => {
+                e.preventDefault()
+                const data = new FormData(e.target);
+                this._addProfile(data.get('title'), data.get('description'))
+            }}">
+        <label for="title">Title</label>
         <input type="text" id="title" name="title">
         <label for="description">Description</label>
         <input type="text" id="description" name="description">

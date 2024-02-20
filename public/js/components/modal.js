@@ -3,11 +3,16 @@ export class Modal extends LitElement {
 
     static get properties() {
         return {
+
+            title: { type: String },
+            content: { type: String }
+
         }
     }
 
     constructor() {
         super()
+        this.title = ''
         this.content = ''
     }
 
@@ -28,7 +33,8 @@ export class Modal extends LitElement {
         return html`<div class="modal">
         <div class="window">
         <div class="menu">
-        <button class="exit" @click="${this.exit}">exit</button>
+        <div class="title"><p>${html`${this.title}`}</p></div>
+        <div><button class="exit" @click="${this.exit}">exit</button></div>
         </div>
         <div class="container">
         <div class="content">
@@ -40,7 +46,8 @@ export class Modal extends LitElement {
     `
     }
 
-    setContent(content) {
+    setContent(title, content) {
+        this.title = title
         this.content = content
     }
 
@@ -58,8 +65,8 @@ export class Modal extends LitElement {
             z-index: 666; /* Sit on top */
             left: 0;
             top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
+            width: 100%; 
+            height: 100%; 
             background-color: rgb(0,0,0); /* Fallback color */
             background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
         }
@@ -80,16 +87,33 @@ export class Modal extends LitElement {
             align-items: center;
             justify-content: center;
             background: white;
+            height: 75%;
         }
 
         .menu {
             display: flex;
             align-items: center;
-            justify-content: flex-end;
+            justify-content: space-between;
             background-color: #ededed;
         }
 
-        .exit {
+        .menu div {
+            width: 50%;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        
+        .title {
+            margin-left: 7.5rem;
+        }
+
+        .title p {
+            font-family: monospace;
+            font-size: 1rem;
+        }
+
+        button,input[type="submit"] {
             appearance: button;
             backface-visibility: hidden;
             background-color: var(--background-second-color);
@@ -114,15 +138,48 @@ export class Modal extends LitElement {
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
-            width: 5rem;;
+            width: 5rem;
+        }
+
+        .exit {
             margin: 0.5rem;
-            align-text: center;
             margin-right: 1.5rem;
         }
 
         .exit img {
            height: 100%;
            width: 100%;
+        }
+
+        form.basic .content, form.basic {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%; 
+            height: 100%; 
+        }
+
+        form.basic input:not([type="submit"]) {
+            text-align: center;
+            background: #c9dcff;
+            border: none;
+            border-radius: 0.5rem;
+            height: 2rem;
+        }
+
+        form.basic input[type="submit"]  {
+            padding: 0;
+            margin-top: 3rem;
+
+        }
+
+        form.basic label {
+            font-size: 1.3rem;
+            font-family: cursive;
+        }
+        form.basic > * {
+            margin-top: 2rem;
         }
     `
     }
