@@ -5,8 +5,8 @@ import { PORT } from '../utils/port.js';
 
 const app = express()
 
-app.set('views', path.join(path.resolve(), 'build/views'));
-app.use(express.static('build/views'));
+app.set('views', path.join(path.resolve(), 'resources/website'));
+app.use(express.static(path.join(path.resolve(), 'resources/website')));
 app.use(express.urlencoded({ extended: true }))
 app.set('view engine', 'html');
 app.engine('html', ejs.renderFile);

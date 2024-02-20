@@ -1,32 +1,30 @@
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import { rollupPluginHTML as html } from '@web/rollup-plugin-html';
+import path from 'path';
 import postcss from "postcss";
 import url from "postcss-url";
 import pkg from 'rollup-plugin-copy';
 import css from "rollup-plugin-import-css";
-import pkgMinifyHTML from 'rollup-plugin-minify-html-literals';
 const copy = pkg;
-const minifyHTML = pkgMinifyHTML.default
 
 export default {
     plugins: [
         // Entry point for application build; can specify a glob to build multiple
         // HTML files for non-SPA app
         html({
-            input: 'public/views/*.html'
+            input: path.join(path.resolve(), 'public/views/index.html')
         }), css(),
         // Resolve bare module specifiers to relative paths
         resolve(),
-        // Minify HTML template literals
-        minifyHTML(),
+        // Minify HTML template literals,
         // Minify JS
         terser({
             ecma: 2021,
             module: true,
             warnings: true,
         }),
-         postcss({
+        postcss({
             plugins: [
                 url({
                     url: "inline", // enable inline assets using base64 encoding
@@ -39,7 +37,7 @@ export default {
         copy()
     ],
     output: {
-        dir: 'build/views',
+        dir: path.join(path.resolve(), 'resources/website')
     },
     preserveEntrySignatures: 'strict',
 };
