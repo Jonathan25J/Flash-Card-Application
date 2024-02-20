@@ -33,8 +33,9 @@ export class Modal extends LitElement {
         return html`<div class="modal">
         <div class="window">
         <div class="menu">
-        <div class="title"><p>${html`${this.title}`}</p></div>
-        <div><button class="exit" @click="${this.exit}">exit</button></div>
+        <div></div>
+        <p>${html`${this.title}`}</p>
+        <button class="exit" @click="${this.exit}">exit</button>
         </div>
         <div class="container">
         <div class="content">
@@ -98,19 +99,12 @@ export class Modal extends LitElement {
         }
 
         .menu div {
-            width: 50%;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-        }
-        
-        .title {
-            margin-left: 7.5rem;
+            width: 6rem;
         }
 
-        .title p {
+        .menu p {
             font-family: monospace;
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         button,input[type="submit"] {
