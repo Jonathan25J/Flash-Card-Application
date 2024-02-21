@@ -1,4 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
+import { profileController } from '../operations/controllers/ProfileController.js';
 import './modal.js';
 import './profile.js';
 export class ProfilesHolder extends LitElement {
@@ -23,6 +24,7 @@ export class ProfilesHolder extends LitElement {
 
     firstUpdated() {
         super.firstUpdated();
+        this._retrieveProfiles()
     }
 
     disconnectedCallback() {
@@ -33,7 +35,7 @@ export class ProfilesHolder extends LitElement {
         return html`<div class="container">
         <div class="menu">
         <a href="" @click="${this._showModal}" class="add-btn">
-         <img src="/static/images/icons/add-btn.png" alt="Add profile">
+         <img src="/images/icons/add-btn.png" alt="Add profile">
          </a>
         </div>
         <div class="profiles">
@@ -59,6 +61,12 @@ export class ProfilesHolder extends LitElement {
         profile.setAttribute('title', title);
         profile.setAttribute('description', description);
         document.body.removeChild(document.querySelector('modal-widget'))
+
+        let json = {
+            title: title,
+            description: description
+        }
+        profileController.updateProfiles(json)
         return this.profiles = [...this.profiles, profile]
     }
 
@@ -76,6 +84,21 @@ export class ProfilesHolder extends LitElement {
         <input type="submit" value="Submit">
         </form> 
         `
+    }
+
+    _retrieveProfiles() {
+        profileController.fetchProfiles().then((data) => {
+            for (let profile in data.profiles) {
+                if (data.profiles.hasOwnProperty(profile)) {
+                    const widget = document.createElement('profile-widget');
+                    widget.setAttribute('id', data.profiles[profile].id);
+                    widget.setAttribute('title', data.profiles[profile].title);
+                    widget.setAttribute('description', data.profiles[profile].description);
+                    this.profiles = [...this.profiles, widget]
+                }
+            }
+        })
+
     }
 
 

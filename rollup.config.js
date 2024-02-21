@@ -34,7 +34,11 @@ export default {
             ]
         }),
         // Optional: copy any static assets to build directory
-        copy()
+        copy({
+            targets: [
+              { src: 'public/images/*', dest: 'resources/website/images' }
+            ]}
+          )
     ],
     output: {
         dir: path.join(path.resolve(), 'resources/website'),

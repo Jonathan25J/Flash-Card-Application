@@ -3,6 +3,9 @@ export class Profile extends LitElement {
 
     static get properties() {
         return {
+            id: {
+                type: String
+            },
             title: {
                 type: String
             },
