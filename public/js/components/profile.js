@@ -1,4 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
+import './profileMenu.js';
 export class Profile extends LitElement {
 
     static get properties() {
@@ -35,12 +36,33 @@ export class Profile extends LitElement {
     }
 
     render() {
-        return html`<div class="container">
+        return html`<div class="container" @click="${this._showMenu}">
         <div class="title">${this.title}</div>
         <div class="line"></div>
         <div class="description">${this.description}</div>
         </div>
     `
+    }
+
+    _showMenu() {
+        const menu = document.createElement('profile-menu')
+        menu.create(this.id)
+    }
+
+    _createMenu() {
+        return html`
+        <form class="basic" @submit="${(e) => {
+                e.preventDefault()
+                const data = new FormData(e.target);
+                this._addProfile(data.get('title'), data.get('description'))
+            }}">
+        <label for="title">Title</label>
+        <input type="text" id="title" name="title">
+        <label for="description">Description</label>
+        <input type="text" id="description" name="description">
+        <input type="submit" value="Submit">
+        </form> 
+        `
     }
 
     static get styles() {
@@ -57,7 +79,7 @@ export class Profile extends LitElement {
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
 
-        .title {
+        .title, .description{
             text-align: center;
         }
 

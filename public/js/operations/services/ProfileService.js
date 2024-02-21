@@ -2,25 +2,21 @@ import { PORT } from '../../../../src/utils/port.js';
 const backendURL = `http://localhost:${PORT}`
 class ProfileService {
 
-    fetchProfiles = () => {
+    fetchProfiles = async () => {
         try {
-            return fetch(`${backendURL}/profile`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .catch(error => {
-                    throw error;
-                });
+            const response = await fetch(`${backendURL}/profile`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return await response.json();
         } catch (error) {
-            throw error; 
+            throw error;
         }
+
     }
 
 
-    updateProfiles = async (body) => {
+    addProfile = async (body) => {
         try {
             const response = await fetch(`${backendURL}/profile`, {
                 method: 'POST',
@@ -34,13 +30,62 @@ class ProfileService {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
 
-            return await response;
+            return response.json();
         } catch (error) {
-            // Handle network errors or other exceptions
-            console.error('Error updating profiles:', error);
-            throw error; // Rethrow the error to propagate it to the caller
+            throw error;
         }
-    };
+
+    }
+
+    getProfile = async (uuid) => {
+        try {
+            const response = await fetch(`${backendURL}/profile/${uuid}`);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return await response.json();
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+    updateProfile = async (body) => {
+        try {
+            const response = await fetch(`${backendURL}/profile`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            return response;
+        } catch (error) {
+            throw error;
+        }
+
+    }
+
+    deleteProfile = async (uuid) => {
+        try {
+            const response = await fetch(`${backendURL}/profile/${uuid}`, {
+                method: 'DELETE'
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
 
 };
 

@@ -31,6 +31,12 @@ export class ProfilesHolder extends LitElement {
         super.disconnectedCallback();
     }
 
+    manualUpdate() {
+        this.profiles = []
+        this._retrieveProfiles()
+        this.requestUpdate()
+    }
+
     render() {
         return html`<div class="container">
         <div class="menu">
@@ -48,25 +54,28 @@ export class ProfilesHolder extends LitElement {
     _showModal(e) {
         e.preventDefault();
         const modal = document.createElement('modal-widget')
-        modal.setContent("create profile", this._createForm())
-        document.body.append(modal)
+        modal.setForm("create profile", this._createForm())
     }
 
     _addProfile(title, description) {
+        const modal = document.querySelector('modal-widget')
         if (title.trim().length === 0) {
-            document.body.removeChild(document.querySelector('modal-widget'))
+            modal.remove()
             return
         }
         const profile = document.createElement('profile-widget');
         profile.setAttribute('title', title);
         profile.setAttribute('description', description);
-        document.body.removeChild(document.querySelector('modal-widget'))
+
+        modal.remove()
 
         let json = {
             title: title,
             description: description
         }
-        profileController.updateProfiles(json)
+        profileController.addProfile(json).then((uuid) => {
+            profile.setAttribute('id', uuid);
+        })
         return this.profiles = [...this.profiles, profile]
     }
 

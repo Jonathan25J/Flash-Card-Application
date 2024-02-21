@@ -1,11 +1,14 @@
 import { LitElement, css, html } from 'lit-element';
+import { updatePage } from '../utils/operations.js';
 export class Modal extends LitElement {
 
     static get properties() {
         return {
 
             title: { type: String },
-            content: { type: String }
+            content: { type: String },
+            slot: { type: Boolean },
+            prompt: { type: Boolean },
 
         }
     }
@@ -14,6 +17,8 @@ export class Modal extends LitElement {
         super()
         this.title = ''
         this.content = ''
+        this.slot = true
+        this.prompt = false
     }
 
     connectedCallback() {
@@ -30,7 +35,7 @@ export class Modal extends LitElement {
     }
 
     render() {
-        return html`<div class="modal">
+        return html`<div class="modal ${this.prompt ? 'prompt' : ''}">
         <div class="window">
         <div class="menu">
         <div></div>
@@ -39,7 +44,7 @@ export class Modal extends LitElement {
         </div>
         <div class="container">
         <div class="content">
-        ${this.content}
+        ${this.slot ? html`<slot></slot>` : this.content}
         </div>
         </div>
         </div>
@@ -47,12 +52,28 @@ export class Modal extends LitElement {
     `
     }
 
-    setContent(title, content) {
+    setForm(title, content) {
+        this.slot = false
         this.title = title
         this.content = content
+        document.body.append(this)
+    }
+
+    setPrompt(title, message, method) {
+        this.prompt = true
+        this.slot = false
+        this.title = title
+        this.content = html`<div class="prompt-container">
+        <p>${message}</p>
+        <button @click="${method}">yes</button>
+        </div>
+        `
+        document.body.append(this)
     }
 
     exit() {
+        if (this.getRootNode() instanceof ShadowRoot) this.getRootNode().host.remove()
+        updatePage()
         this.remove()
     }
 
@@ -62,14 +83,14 @@ export class Modal extends LitElement {
             display: flex;
             align-items: center;
             justify-content: center;
-            position: fixed; /* Stay in place */
-            z-index: 666; /* Sit on top */
+            position: fixed; 
+            z-index: 666; 
             left: 0;
             top: 0;
             width: 100%; 
             height: 100%; 
-            background-color: rgb(0,0,0); /* Fallback color */
-            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
         }
 
         .window {
@@ -77,37 +98,41 @@ export class Modal extends LitElement {
             flex-direction: column;
             width: 70%;
             height: 70%;
-            background-color: white;
             border: 1.5rem solid var(--background-second-color);
             border-radius: 2rem;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+
+        div.prompt .window {
+            height: 30%;
         }
 
         .container {
             display:flex;
             align-items: center;
             justify-content: center;
-            background: white;
-            height: 75%;
+            height: 100%;
         }
 
         .menu {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: space-evenly;
             background-color: #ededed;
         }
 
         .menu div {
+            display: none;
             width: 6rem;
         }
 
         .menu p {
             font-family: monospace;
             font-size: 1.1rem;
+            text-align: center;
         }
 
-        button,input[type="submit"] {
+        div.prompt button, form.basic button, button.exit, input[type="submit"] {
             appearance: button;
             backface-visibility: hidden;
             background-color: var(--background-second-color);
@@ -145,13 +170,19 @@ export class Modal extends LitElement {
            width: 100%;
         }
 
-        form.basic .content, form.basic {
+        .content {
+            width: 100%; 
+            height: 100%; 
+        }
+
+        form.basic {
             display: flex;
             align-items: center;
             flex-direction: column;
             justify-content: center;
             width: 100%; 
             height: 100%; 
+            background-color: white;
         }
 
         form.basic input:not([type="submit"]) {
@@ -172,8 +203,39 @@ export class Modal extends LitElement {
             font-size: 1.3rem;
             font-family: cursive;
         }
-        form.basic > * {
+        form.basic > *:not(:first-child) {
             margin-top: 2rem;
+        }
+
+        div.prompt .prompt-container button {
+            background-color: #78cfb7;
+        }
+
+        .prompt-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            width: 100%;
+            background-color: white;
+        }
+
+        .prompt-container p {
+            margin: 0;
+            margin-right: 2rem;
+            font-size: 1.2rem;
+            font-family: emoji;
+            text-align: center;
+        }
+
+        @media (min-width: 475px) {
+            .menu div {
+                display: block;
+            }
+
+            .menu {
+            justify-content: space-between;
+        }
         }
     `
     }

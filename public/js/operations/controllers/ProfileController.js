@@ -6,8 +6,20 @@ class ProfileController {
         return profileService.fetchProfiles()
     }
 
-    updateProfiles(body) {
-        return profileService.updateProfiles(body)
+    addProfile(body) {
+        return profileService.addProfile(body)
+    }
+
+    getProfile(uuid) {
+        return profileService.getProfile(uuid)
+    }
+
+    updateProfile(body) {
+        return profileService.updateProfile(body)
+    }
+
+    deleteProfile(uuid) {
+        return profileService.deleteProfile(uuid)
     }
 }
 
