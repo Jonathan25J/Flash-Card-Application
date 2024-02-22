@@ -1,0 +1,13 @@
+.cards {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2.5rem;
+    height: 80%;
+}
+
+cards-switcher {
+    display: block;
+    height: 100%;
+    width: 80%;
+}

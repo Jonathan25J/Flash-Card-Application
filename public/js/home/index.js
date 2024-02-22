@@ -1,2 +1,2 @@
-import '../components/profilesHolder.js';
+import '../components/profile/profilesHolder.js';
 

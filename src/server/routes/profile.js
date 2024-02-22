@@ -48,7 +48,7 @@ router.get('/', (req, res) => {
 })
 
 router.get('/:uuid/cards', (req, res) => {
-    res.render('index.html')
+    res.render('cards.html')
 })
 
 router.post('/', (req, res) => {

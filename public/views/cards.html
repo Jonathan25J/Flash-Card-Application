@@ -4,22 +4,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="module" src="../js/cards/index.js"></script>
+    <link rel="stylesheet" href="/styles/cards/components/cards.css">
     <link rel="stylesheet" href="/styles/theme.css">
-    <script type="module" src="../js/home/index.js"></script>
-    <link rel="stylesheet" href="/styles/home/components/profiles.css">
-    <link rel="stylesheet" href="/styles/home/style.css">
-    <link rel="stylesheet" href="/styles/home/utils.css">
     <link rel="stylesheet" href="/styles/utils.css">
     <script type="text/javascript" src="https://livejs.com/live.js"></script> <!-- live server -->
-    <title>Main page</title>
+    <title>Cards</title>
 </head>
 <body>
     <header class="header container">
-        <p>Profiles</p>
+        <home-button></home-button>
+        <p>Cards</p>
     </header>
     <main>
-        <section class="profiles container">
-            <profiles-holder></profiles-holder>
+        <section class="cards container">
+            <cards-switcher></cards-switcher>
         </section>
     </main>
 </body>

@@ -13,8 +13,9 @@ export default {
         // Entry point for application build; can specify a glob to build multiple
         // HTML files for non-SPA app
         html({
-            input: path.join(path.resolve(), 'public/views/index.html'),
-            transformHtml: [html => html.replaceAll('href="', 'href="/'), html =>  html.replaceAll('src=".', 'src="/.') ],
+            input: [path.join(path.resolve(), 'public/views/index.html'), path.join(path.resolve(), 'public/views/cards.html')],
+            transformHtml: [ html =>  html.replaceAll('src=".', 'src="/.') ],
+            extractAssets: false,
         }), css(),
         // Resolve bare module specifiers to relative paths
         resolve(),
@@ -37,15 +38,15 @@ export default {
         // Optional: copy any static assets to build directory
         copy({
             targets: [
-              { src: 'public/images/*', dest: 'resources/website/images' }
+              { src: 'public/images/*', dest: 'resources/website/images' },
+              { src: 'public/styles/*', dest: 'resources/website/styles' }
             ]}
           )
     ],
     output: {
         dir: path.join(path.resolve(), 'resources/website'),
         entryFileNames: 'js/[name]-[hash].js',
-        chunkFileNames: 'js/[name]-[hash].js',
-        assetFileNames: 'styles/[name]-[hash].css'
+        chunkFileNames: 'js/[name]-[hash].js'
     },
     preserveEntrySignatures: 'strict',
 };
