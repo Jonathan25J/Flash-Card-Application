@@ -47,6 +47,10 @@ router.get('/', (req, res) => {
     })
 })
 
+router.get('/:uuid/cards', (req, res) => {
+    res.render('index.html')
+})
+
 router.post('/', (req, res) => {
     const path = dataManageMent.getProfilesPath()
     fs.readFile(path, (err, data) => {

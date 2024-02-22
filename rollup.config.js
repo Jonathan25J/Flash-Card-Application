@@ -13,7 +13,8 @@ export default {
         // Entry point for application build; can specify a glob to build multiple
         // HTML files for non-SPA app
         html({
-            input: path.join(path.resolve(), 'public/views/index.html')
+            input: path.join(path.resolve(), 'public/views/index.html'),
+            transformHtml: [html => html.replaceAll('href="', 'href="/'), html =>  html.replaceAll('src=".', 'src="/.') ],
         }), css(),
         // Resolve bare module specifiers to relative paths
         resolve(),
