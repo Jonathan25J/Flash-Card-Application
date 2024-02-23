@@ -19,6 +19,27 @@ export class CardsSwitcher extends LitElement {
         super.firstUpdated();
     }
 
+    updated() {
+        super.updated();
+        const questionImage = this.shadowRoot.querySelector('#question-image')
+        const answerImage = this.shadowRoot.querySelector('#answer-image')
+        const questionImageContainer = this.shadowRoot.querySelector('.card-question-image')
+        const answerImageContainer = this.shadowRoot.querySelector('.card-answer-image')
+
+        if (questionImage.classList.contains("visible")) {
+            questionImageContainer.classList.add('image-added');
+        } else {
+            questionImageContainer.classList.remove('image-added');
+        }
+
+        if (answerImage.classList.contains("visible")) {
+            answerImageContainer.classList.add('image-added');
+        } else {
+            answerImageContainer.classList.remove('image-added');
+        }
+
+    }
+
     disconnectedCallback() {
         super.disconnectedCallback();
     }
@@ -40,6 +61,8 @@ export class CardsSwitcher extends LitElement {
         </a>
         </div>
         </div>
+        <img class="question-image" id=question-image src="" alt="Question image">
+        <img class="answer-image" id=answer-image  src="" alt="Answer image">
         <div class="card">
         <div class="card-name">
         <label for="card-name">Name</label>
@@ -57,23 +80,31 @@ export class CardsSwitcher extends LitElement {
         </div>
         <div class="card-images">
         <div class="card-question-image">
+        <div class="c-q-i-container">
         <label for="c-q-i-input">Paste image question</label>
         <input type="text" @paste="${this._pasteImage}" id="c-q-i-input" name="c-q-i-input">
-        <button class="c-q-i-button">Upload Image
-        <input type="file" id="c-q-i_input" accept="image/*" hidden>
+        </div>
+        <div class="c-q-i-b-container">
+        <button id=c-q-i-button @click="${this._triggerUploadImageEvent}">Upload Image
+        <input type="file" id=c-q-i-input-h @change="${this._uploadImage}" accept="image/*" hidden>
         </button>
+        <button id=c-q-i-remove-button @click="${this._removeImage}">Remove Image</button>
+        </div>
         </div>
         <div class="card-answer-image">
+        <div class="c-a-i-container">
         <label for="c-a-i-input">Paste image answer</label>
         <input type="text" @paste="${this._pasteImage}" id="c-a-i-input" name="c-a-i-input">
-        <button class="c-a-i-button">Upload Image
-        <input type="file" id="c-a-i_input" accept="image/*" hidden>
+        </div>
+        <div class="c-q-i-b-container">
+        <button id=c-a-i-button @click="${this._triggerUploadImageEvent}">Upload Image
+        <input type="file" id=c-a-i-input-h @change="${this._uploadImage}" accept="image/*" hidden>
         </button>
+        <button id=c-a-i-remove-button @click="${this._removeImage}">Remove Image</button>
         </div>
         </div>
         </div>
-        <img class="question-image" id=question-image src="/images/icons/upload-image-btn.png" alt="Question image">
-        <img class="answer-image" id=answer-image  src="/images/icons/upload-image-btn.png" alt="Answer image">
+        </div>
         </div>
     `
     }
@@ -82,30 +113,70 @@ export class CardsSwitcher extends LitElement {
         e.preventDefault();
         let items = (e.clipboardData || window.clipboardData).items
 
-        let image = this.shadowRoot.querySelector(`#${e.target.id == 'c-q-i-input' ? 'question-image' : 'answer-image'}`) 
+        let image = this.shadowRoot.querySelector(`#${e.target.id == 'c-q-i-input' ? 'question-image' : 'answer-image'}`)
+        let currentElement = this
         for (const item of items) {
             if (item.type.indexOf('image') !== -1) {
                 let blob = item.getAsFile();
 
                 const reader = new FileReader();
 
-                reader.onload = function (event) {
-                    let imageData = event.target.result;
+                reader.onload = (e) => {
+                    let imageData = e.target.result;
                     image.src = imageData
+                    image.classList.add('visible')
+                    currentElement.requestUpdate()
                 }
 
                 reader.readAsDataURL(blob);
-                return
+
             }
         }
-        this.requestUpdate()
-
 
 
     }
 
+    _triggerUploadImageEvent(e) {
+        if (e.target.tagName != 'BUTTON') return
+        this.shadowRoot.querySelector(`#${e.target.id == 'c-q-i-button' ? 'c-q-i-input-h' : 'c-a-i-input-h'}`).click()
+
+    }
+
     _uploadImage(e) {
-        
+        e.preventDefault();
+        const fileList = e.target.files;
+        const image = this.shadowRoot.querySelector(`#${e.target.id == 'c-q-i-input-h' ? 'question-image' : 'answer-image'}`);
+        let currentElement = this
+        if (fileList.length > 0) {
+            const file = fileList[0]; // Assuming single file selection
+            const reader = new FileReader();
+
+            reader.onload = (e)=> {
+                const imageData = e.target.result;
+
+                image.src = imageData;
+                image.classList.add('visible');
+                currentElement.requestUpdate();
+
+            };
+
+            reader.readAsDataURL(file);
+        }
+    }
+
+
+    _removeImage(e) {
+        const questionImage = this.shadowRoot.querySelector('#question-image')
+        const answerImage = this.shadowRoot.querySelector('#answer-image')
+        if (e.target.id == 'c-q-i-remove-button') {
+            questionImage.src = ""
+            questionImage.classList.remove('visible')
+        } else {
+            answerImage.src = ""
+            answerImage.classList.remove('visible')
+        }
+
+        this.requestUpdate()
     }
 
 
@@ -121,6 +192,7 @@ export class CardsSwitcher extends LitElement {
             background-color: rgba(0, 0, 0, 0.5);
             border-radius: 0.5rem;
             overflow-y: auto;
+            overflow-x: hidden;
             scrollbar-color: lightblue transparent;
             color: white;
             font-family: cursive;
@@ -188,8 +260,10 @@ export class CardsSwitcher extends LitElement {
         .card-name > *,
         .card-question > *, 
         .card-answer > *,
-        .card-question-image > *,
-        .card-answer-image > * {
+        .c-q-i-container > *,
+        .c-a-i-container > *,
+        .c-q-i-b-container > *,
+        .c-a-i-b-container > * {
             margin: 0.5rem;
         }
 
@@ -246,27 +320,82 @@ export class CardsSwitcher extends LitElement {
 
         .question-image {
             position: absolute;
-            width: 12rem;
-            height: 12rem;
-            top: 12%;
-            left: 10%;
+            width: 11rem;
+            height: 11rem;
+            top: 14%;
+            left: 2.5%;
             opacity: 0.2;
             z-index: -1;
+            display: none;
         }
 
         .answer-image {
             position: absolute;
-            width: 12rem;
-            height: 12rem;
-            top: 12%;
-            right: 10%;
+            width: 11rem;
+            height: 11rem;
+            top: 14%;
+            right: 2.5%;
             opacity: 0.2;
             z-index: -1;
-        }
-
-        .question-image, .answer-image {
             display: none;
         }
+
+        .question-image.visible, .answer-image.visible {
+            display: none;
+        }
+
+        .card-images input {
+            width: 5rem;
+        }
+
+        .card-images button {
+            appearance: button;
+            backface-visibility: hidden;
+            border-radius: 6px;
+            border-width: 0;
+            box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
+            box-sizing: border-box;
+            color: #fff;
+            cursor: pointer;
+            font-family: sans-serif;
+            font-size: 100%;
+            height: 44px;
+            line-height: 1.15;
+            outline: none;
+            overflow: hidden;
+            position: relative;
+            text-align: center;
+            text-transform: none;
+            transform: translateZ(0);
+            transition: all .2s,box-shadow .08s ease-in;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            width: 5rem;
+        }
+
+        #c-q-i-button, #c-a-i-button {
+            background-color: rgb(95 163 144);
+        }
+
+        #c-q-i-remove-button, #c-a-i-remove-button {
+            background-color: #594fad;
+        }
+
+        .c-q-i-container, .c-a-i-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .visible {
+            display: block;
+        }
+
+        div.card-question-image.image-added button:first-child, div.card-answer-image.image-added button:first-child {
+            background-color: rgb(60 97 151) !important;
+        }
+
 
 
         @media (min-width: 640px) {
@@ -303,9 +432,11 @@ export class CardsSwitcher extends LitElement {
                 width: 12rem;
             }
 
-            .question-image, .answer-image {
-            display: block;
+            .question-image.visible, .answer-image.visible {
+                display: block;
             }
+
+          
 
 
         
