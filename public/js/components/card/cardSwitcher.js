@@ -17,6 +17,7 @@ export class CardsSwitcher extends LitElement {
         this.currentCard = {}
         this.options = []
         this.profileId = window.location.href.split('/')[4]
+        this.cards = []
     }
 
 
@@ -45,12 +46,12 @@ export class CardsSwitcher extends LitElement {
         <div class="menu" id=card-switcher-menu">
         <div class="selector-container">
         <label for="card-selector">Card</label>
-        <select name="card-selector" id=card-selector @change="${this._cardIsSelected}" class="card-selector">
+        <select name="card-selector" id=card-selector @change="${this._cardIsSelected}"  @click="${this._cardIsSelected}" class="card-selector">
         ${this.options.map(option => html`${option}`)}
         </select>
         </div>
         <div class="buttons">
-        <a href="" class="menu-button">
+        <a href="" class="menu-button" @click="${this._removeCard}">
         <img src="/images/icons/remove-btn.png" alt="Remove a card">
         </a>
         <a href="" class="menu-button" @click="${this._newCard}">
@@ -65,7 +66,7 @@ export class CardsSwitcher extends LitElement {
     }
 
     _retrieveCards() {
-        if (this.options.length != 0) this.options = []
+        this.options = []
         profileController.getProfile(this.profileId).then((profile) => {
             this.cards = profile.cards
             for (let cardIteration in profile.cards) {
@@ -74,11 +75,15 @@ export class CardsSwitcher extends LitElement {
                 this.options = [...this.options, cardOption]
             }
             this.requestUpdate()
+        }).catch(() => {
+            location.reload()
         })
     }
 
     _cardIsSelected() {
-        const card = new Card(this.cards.find(card => card.id == this.shadowRoot.querySelector('#card-selector').value))
+        const cardId = this.shadowRoot.querySelector('#card-selector').value
+        if (cardId == '') return
+        const card = new Card(this.cards.find(card => card.id == cardId))
         this.cardElement.setCard(card)
     }
 
@@ -91,13 +96,28 @@ export class CardsSwitcher extends LitElement {
         profileController.addCard(this.profileId, this.currentCard)
     }
 
+    _updateCard() {
+        profileController.updateCard(this.profileId, this.currentCard)
+    }
+
     _newCard(e) {
         e.preventDefault()
         this._refresh()
         if (!this.cardElement.isValid()) return
-        if (this.currentCard.id == '') this._addCard()
+        this.currentCard.id == '' ? this._addCard() : this._updateCard()
         this.cardElement.clear()
     }
+
+    _removeCard(e) {
+        e.preventDefault()
+        this.currentCard = this.cardElement.retrieve()
+        if (this.currentCard.id == '') return
+        profileController.deleteCard(this.profileId, this.currentCard.id).then(() => {
+            this._refresh()
+            this.cardElement.clear()
+        })
+    }
+
 
     static get styles() {
         return css`

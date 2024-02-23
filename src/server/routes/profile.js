@@ -8,7 +8,7 @@ router.get('/:uuid', (req, res) => {
     const profilesPath = dataManagement.getProfilesPath();
     const uuid = req.params.uuid;
 
-    fs.readFile(profilesPath, (err, dataToBeParsed) => {
+    readData(profilesPath, (err, dataToBeParsed) => {
         if (err) {
             return res.status(500).send('Error reading data');
         }
@@ -20,20 +20,25 @@ router.get('/:uuid', (req, res) => {
             return res.status(402).send('Profile not found');
         }
 
-        fs.readFile(dataManagement.getCardsPath(uuid), (err, cardsData) => {
+        readData(dataManagement.getCardsPath(uuid), (err, cardsData) => {
             if (err) {
                 return res.status(500).send('Error reading data');
             }
 
-            const cards = JSON.parse(cardsData).cards;
-            const user = {
-                id: profile.id,
-                title: profile.title,
-                description: profile.description,
-                cards: cards
-            };
+            try {
+                const cards = JSON.parse(cardsData).cards;
+                const user = {
+                    id: profile.id,
+                    title: profile.title,
+                    description: profile.description,
+                    cards: cards
+                };
+                res.json(user);
+            } catch (parseError) {
+                res.status(500).send('Error parsing JSON data');
+            }
 
-            res.json(user);
+
         });
     });
 })
@@ -41,7 +46,7 @@ router.get('/:uuid', (req, res) => {
 router.get('/', (req, res) => {
     const path = dataManagement.getProfilesPath()
 
-    fs.readFile(path, (err, data) => {
+    readData(path, (err, data) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
@@ -58,7 +63,7 @@ router.get('/:uuid/cards', (req, res) => {
 
 router.post('/', (req, res) => {
     const path = dataManagement.getProfilesPath()
-    fs.readFile(path, (err, dataToBeParsed) => {
+    readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
@@ -72,7 +77,7 @@ router.post('/', (req, res) => {
 
         }
         data.profiles.push(newProfile)
-        fs.writeFile(path, JSON.stringify(data, null, 2), (err) => {
+        writeData(path, JSON.stringify(data, null, 2), (err) => {
             if (err) {
                 res.status(500).send('Error writing data');
                 return;
@@ -86,7 +91,7 @@ router.post('/', (req, res) => {
 router.post('/:uuid/cards', (req, res) => {
     const uuid = req.params.uuid
     const path = dataManagement.getCardsPath(uuid)
-    fs.readFile(path, (err, dataToBeParsed) => {
+    readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
@@ -105,11 +110,13 @@ router.post('/:uuid/cards', (req, res) => {
             answerImage: answerImage
         }
 
+        dataManagement.createCardConfig(uuid, cardId)
+
         if (questionImage.trim().length != 0) newCard['questionImage'] = dataManagement.writeImage(uuid, cardId, 'question', questionImage)
         if (answerImage.trim().length != 0) newCard['answerImage'] = dataManagement.writeImage(uuid, cardId, 'answer', answerImage)
 
         data.cards.push(newCard)
-        fs.writeFile(path, JSON.stringify(data, null, 2), (err) => {
+        writeData(path, JSON.stringify(data, null, 2), (err) => {
             if (err) {
                 res.status(500).send('Error writing data');
                 return;
@@ -123,7 +130,7 @@ router.post('/:uuid/cards', (req, res) => {
 router.patch('/', (req, res) => {
     const path = dataManagement.getProfilesPath()
 
-    fs.readFile(path, (err, dataToBeParsed) => {
+    readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
@@ -135,7 +142,7 @@ router.patch('/', (req, res) => {
         if (index !== -1) {
             data.profiles[index] = updatedProfile
 
-            fs.writeFile(path, JSON.stringify(data, null, 2), (err) => {
+            writeData(path, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
                     res.status(500).send('Error writing data');
                     return;
@@ -150,10 +157,48 @@ router.patch('/', (req, res) => {
     })
 })
 
+router.patch('/:uuid/cards', (req, res) => {
+    const uuid = req.params.uuid
+    const path = dataManagement.getCardsPath(uuid)
+
+    readData(path, (err, dataToBeParsed) => {
+        if (err) {
+            res.status(500).send('Error reading data');
+            return;
+        }
+        const updatedCard = req.body
+        const cardId = updatedCard.id
+        const questionImage = updatedCard.questionImage
+        const answerImage = updatedCard.answerImage
+
+        if (questionImage.startsWith('data:')) updatedCard['questionImage'] = dataManagement.writeImage(uuid, cardId, 'question', questionImage)
+        if (answerImage.startsWith('data:')) updatedCard['answerImage'] = dataManagement.writeImage(uuid, cardId, 'answer', answerImage)
+
+        const data = JSON.parse(dataToBeParsed)
+        const index = data.cards.findIndex(card => card.id === updatedCard.id);
+
+        if (index !== -1) {
+            data.cards[index] = updatedCard
+
+            writeData(path, JSON.stringify(data, null, 2), (err) => {
+                if (err) {
+                    res.status(500).send('Error writing data');
+                    return;
+                }
+                res.status(200).send('Card is updated successfully');
+            })
+
+        } else {
+            res.status(402).send('Card not found');
+        }
+
+    })
+})
+
 router.delete('/:uuid', (req, res) => {
     const path = dataManagement.getProfilesPath()
 
-    fs.readFile(path, (err, dataToBeParsed) => {
+    readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
@@ -165,7 +210,7 @@ router.delete('/:uuid', (req, res) => {
         if (index !== -1) {
             data.profiles.splice(index, 1);
 
-            fs.writeFile(path, JSON.stringify(data, null, 2), (err) => {
+            writeData(path, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
                     res.status(500).send('Error writing data');
                     return;
@@ -181,6 +226,62 @@ router.delete('/:uuid', (req, res) => {
 
     })
 })
+
+router.delete('/:uuid/cards/:cardId', (req, res) => {
+    const uuid = req.params.uuid
+    const cardId = req.params.cardId;
+    const path = dataManagement.getCardsPath(uuid)
+
+    readData(path, (err, dataToBeParsed) => {
+        if (err) {
+            res.status(500).send('Error reading data');
+            return;
+        }
+
+        const data = JSON.parse(dataToBeParsed)
+        const index = data.cards.findIndex(card => card.id === cardId);
+
+        if (index !== -1) {
+            data.cards.splice(index, 1);
+
+            writeData(path, JSON.stringify(data, null, 2), (err) => {
+                if (err) {
+                    res.status(500).send('Error writing data');
+                    return;
+                }
+
+                dataManagement.removeCardConfig(uuid, cardId)
+                res.status(200).send('Card is successfully removed');
+            })
+
+        } else {
+            res.status(402).send('Card not found');
+        }
+
+    })
+})
+
+
+
+function readData(filePath, callback) {
+    fs.readFile(filePath, { flag: 'r' }, (err, data) => {
+        if (err) {
+            return callback(err);
+        }
+
+        callback(null, data);
+    });
+}
+
+// Function to write JSON data to file with file locking
+function writeData(filePath, data, callback) {
+    fs.writeFile(filePath, data, { flag: 'w' }, (err) => {
+        if (err) {
+            return callback(err);
+        }
+        callback(null);
+    });
+}
 
 
 

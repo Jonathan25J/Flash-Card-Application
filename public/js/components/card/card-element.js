@@ -76,6 +76,7 @@ export class CardElement extends LitElement {
     }
 
     clear() {
+        this.id = ''
         this.name = ''
         this.question = ''
         this.answer = ''
@@ -112,8 +113,11 @@ export class CardElement extends LitElement {
         this.name_element.value = card.name
         this.question_element.value = card.question
         this.answer_element.value = card.answer
-        this.questionImage_element.src = card.questionImage == undefined ? "" : card.questionImage
-        this.answerImage_element.src = card.answerImage == undefined ? "" : card.answerImage
+        this.questionImage_element.src = card.questionImage == "" ? "" : card.questionImage
+        this.answerImage_element.src = card.answerImage == "" ? "" : card.answerImage
+
+        card.questionImage != '' ? this.questionImage_element.classList.add('visible') : this.questionImage_element.classList.remove('visible') 
+        card.answerImage != '' ? this.answerImage_element.classList.add('visible') : this.answerImage_element.classList.remove('visible')
         this.requestUpdate()
     }
 

@@ -12,15 +12,13 @@ class DataManagement {
     }
 
     createProfileConfig(uuid) {
-        let profilePath = path.join(path.resolve(), `resources/data/profiles/${uuid}/cards.json`)
-        let imagesPath = path.join(path.resolve(), `resources/data/profiles/${uuid}/images`)
+        let profilePath = path.join(path.resolve(), `resources/data/profiles/${uuid}/cards/cards.json`)
         fse.ensureFile(profilePath).then(() => {
             const defaultJson = {
                 "cards": []
             }
             fs.writeFileSync(profilePath, JSON.stringify(defaultJson, null, 2))
         })
-        fse.ensureDir(imagesPath)
     }
 
     removeProfileConfig(uuid) {
@@ -30,16 +28,28 @@ class DataManagement {
         })
     }
 
+    removeCardConfig(uuid, cardUuid) {
+        let cardPath = path.join(path.resolve(), `resources/data/profiles/${uuid}/cards/${cardUuid}`)
+        fse.ensureDir(cardPath).then(() => {
+            rimraf(cardPath)
+        })
+    }
+
     getCardsPath(uuid) {
-        return path.join(path.resolve(), `resources/data/profiles/${uuid}/cards.json`);
+        return path.join(path.resolve(), `resources/data/profiles/${uuid}/cards/cards.json`);
+    }
+
+    createCardConfig(uuid, cardUuid)  {
+        let cardPath = path.join(path.resolve(), `resources/data/profiles/${uuid}/cards/${cardUuid}/images`)
+        fse.ensureDirSync(cardPath)
     }
 
     writeImage(uuid, cardUuid, name, image) {
         const type = image.split(';')[0].split(':')[1].split('/')[1]
-        let imagePath = path.join(path.resolve(), `resources/data/profiles/${uuid}/images/${name}-${cardUuid}.${type}`)
+        let imagePath = path.join(path.resolve(), `resources/data/profiles/${uuid}/cards/${cardUuid}/images/${name}.${type}`)
         const buffer = Buffer.from(image.split('base64')[1], 'base64')
         fs.writeFileSync(imagePath, buffer)
-        return imagePath
+        return `/profiles/${uuid}/cards/${cardUuid}/images/${name}.${type}`
     }
 
     #checkPaths() {

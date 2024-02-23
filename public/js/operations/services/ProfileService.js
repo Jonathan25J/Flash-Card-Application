@@ -30,6 +30,15 @@ class ProfileService {
 
     }
 
+    deleteCard = async (uuid, cardId) => {
+        return await requestManager.doFetch(`/profile/${uuid}/cards/${cardId}`, 'DELETE', undefined, false)
+    }
+
+    updateCard = async (uuid, body) => {
+        return await requestManager.doFetch(`/profile/${uuid}/cards`, 'PATCH', body, false)
+
+    }
+
 }
 
 export const profileService = new ProfileService();
