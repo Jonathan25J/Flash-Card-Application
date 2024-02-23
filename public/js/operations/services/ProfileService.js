@@ -22,7 +22,7 @@ class ProfileService {
     }
 
     deleteProfile = async (uuid) => {
-        return await requestManager.doFetch(`/profile/${uuid}`, 'DELETE', false)
+        return await requestManager.doFetch(`/profile/${uuid}`, 'DELETE', undefined, false)
     }
 
     addCard = async (uuid, body) => {

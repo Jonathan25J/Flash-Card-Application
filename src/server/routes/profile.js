@@ -84,21 +84,30 @@ router.post('/', (req, res) => {
 })
 
 router.post('/:uuid/cards', (req, res) => {
-    const path = dataManagement.getCardsPath(req.params.uuid)
+    const uuid = req.params.uuid
+    const path = dataManagement.getCardsPath(uuid)
     fs.readFile(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
         }
         let data = JSON.parse(dataToBeParsed)
+
+        let cardId = uuidv4().split('-')[0]
+        let questionImage = req.body.questionImage
+        let answerImage = req.body.answerImage
         let newCard = {
-            id: uuidv4().split('-')[0],
+            id: cardId,
             name: req.body.name,
             question: req.body.question,
             answer: req.body.answer,
-            questionImage: req.body.questionImage,
-            answerImage: req.body.answerImage
+            questionImage: questionImage,
+            answerImage: answerImage
         }
+
+        if (questionImage.trim().length != 0) newCard['questionImage'] = dataManagement.writeImage(uuid, cardId, 'question', questionImage)
+        if (answerImage.trim().length != 0) newCard['answerImage'] = dataManagement.writeImage(uuid, cardId, 'answer', answerImage)
+
         data.cards.push(newCard)
         fs.writeFile(path, JSON.stringify(data, null, 2), (err) => {
             if (err) {

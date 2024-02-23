@@ -97,12 +97,8 @@ export class CardElement extends LitElement {
         this.name = this.name_element.value
         this.question = this.question_element.value
         this.answer = this.answer_element.value
-
-        let questionImageObject = new Image()
-        questionImageObject.src = questionImage.src;
-
-        this.questionImage = questionImage.src == window.location.href ? "" : questionImageObject
-        this.answerImage = answerImage.src == window.location.href ? "" : new Image().src == answerImage.src
+        this.questionImage = questionImage.src == window.location.href ? "" : questionImage.src
+        this.answerImage = answerImage.src == window.location.href ? "" : answerImage.src
 
         return new Card(this.id, this.name, this.question, this.answer, this.questionImage, this.answerImage)
     }
