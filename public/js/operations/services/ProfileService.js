@@ -1,94 +1,35 @@
-import { PORT } from '../../../../src/utils/port.js';
-const backendURL = `http://localhost:${PORT}`
+import { requestManager } from './RequestManager';
+
 class ProfileService {
 
     fetchProfiles = async () => {
-        try {
-            const response = await fetch(`${backendURL}/profile`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return await response.json();
-        } catch (error) {
-            throw error;
-        }
+        return await requestManager.doFetch('/profile')
 
     }
 
-
     addProfile = async (body) => {
-        try {
-            const response = await fetch(`${backendURL}/profile`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                body: JSON.stringify(body)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            return response.json();
-        } catch (error) {
-            throw error;
-        }
+        return await requestManager.doFetch('/profile', 'POST', body)
 
     }
 
     getProfile = async (uuid) => {
-        try {
-            const response = await fetch(`${backendURL}/profile/${uuid}`);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return await response.json();
-        } catch (error) {
-            throw error;
-        }
+        return await requestManager.doFetch(`/profile/${uuid}`)
     }
 
-
     updateProfile = async (body) => {
-        try {
-            const response = await fetch(`${backendURL}/profile`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json;charset=utf-8'
-                },
-                body: JSON.stringify(body)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-
-            return response;
-        } catch (error) {
-            throw error;
-        }
+        return await requestManager.doFetch('/profile', 'PATCH', body, false)
 
     }
 
     deleteProfile = async (uuid) => {
-        try {
-            const response = await fetch(`${backendURL}/profile/${uuid}`, {
-                method: 'DELETE'
-            });
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response;
-        } catch (error) {
-            throw error;
-        }
+        return await requestManager.doFetch(`/profile/${uuid}`, 'DELETE', false)
     }
 
+    addCard = async (uuid, body) => {
+        return await requestManager.doFetch(`/profile/${uuid}/cards`, 'POST', body, false)
 
+    }
 
-};
+}
 
-
-
-export const profileService = new ProfileService()
+export const profileService = new ProfileService();

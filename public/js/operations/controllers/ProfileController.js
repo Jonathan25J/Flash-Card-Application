@@ -21,6 +21,10 @@ class ProfileController {
     deleteProfile(uuid) {
         return profileService.deleteProfile(uuid)
     }
+
+    addCard(uuid, body) {
+        return profileService.addCard(uuid, body)
+    }
 }
 
 export const profileController = new ProfileController()

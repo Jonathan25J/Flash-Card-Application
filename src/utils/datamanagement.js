@@ -2,7 +2,7 @@ import fs from 'fs';
 import fse from 'fs-extra';
 import path from 'path';
 import { rimraf } from 'rimraf';
-class DataManageMent {
+class DataManagement {
     constructor() {
         this.#checkPaths()
     }
@@ -28,6 +28,10 @@ class DataManageMent {
         })
     }
 
+    getCardsPath(uuid) {
+        return path.join(path.resolve(), `resources/data/profiles/${uuid}/cards.json`);
+    }
+
     #checkPaths() {
         let path = this.getProfilesPath();
         if (!fs.existsSync(path))
@@ -39,5 +43,5 @@ class DataManageMent {
         })
     }
 }
-const dataManageMent = new DataManageMent();
-export { dataManageMent };
+const dataManagement = new DataManagement();
+export { dataManagement };

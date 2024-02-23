@@ -1,40 +1,45 @@
 import { Router } from 'express';
 import fs from 'fs';
 import { v4 as uuidv4 } from 'uuid';
-import { dataManageMent } from '../../utils/datamanagement.js';
+import { dataManagement } from '../../utils/datamanagement.js';
 const router = Router()
 
 router.get('/:uuid', (req, res) => {
-    const path = dataManageMent.getProfilesPath()
+    const profilesPath = dataManagement.getProfilesPath();
+    const uuid = req.params.uuid;
 
-    fs.readFile(path, (err, dataToBeParsed) => {
+    fs.readFile(profilesPath, (err, dataToBeParsed) => {
         if (err) {
-            res.status(500).send('Error reading data');
-            return;
+            return res.status(500).send('Error reading data');
         }
 
-        const data = JSON.parse(dataToBeParsed)
+        const profileData = JSON.parse(dataToBeParsed);
+        const profile = profileData.profiles.find(profile => profile.id === uuid);
 
-        for (let profile in data.profiles) {
-            if (data.profiles.hasOwnProperty(profile)) {
-                if (data.profiles[profile].id === req.params.uuid) {
-                    let user = {
-                        id: data.profiles[profile].id,
-                        title: data.profiles[profile].title,
-                        description: data.profiles[profile].description
+        if (!profile) {
+            return res.status(402).send('Profile not found');
+        }
 
-                    }
-                    res.json(user)
-                    return
-                }
+        fs.readFile(dataManagement.getCardsPath(uuid), (err, cardsData) => {
+            if (err) {
+                return res.status(500).send('Error reading data');
             }
-        }
-        res.status(402).send('Profile not found');
-    })
+
+            const cards = JSON.parse(cardsData).cards;
+            const user = {
+                id: profile.id,
+                title: profile.title,
+                description: profile.description,
+                cards: cards
+            };
+
+            res.json(user);
+        });
+    });
 })
 
 router.get('/', (req, res) => {
-    const path = dataManageMent.getProfilesPath()
+    const path = dataManagement.getProfilesPath()
 
     fs.readFile(path, (err, data) => {
         if (err) {
@@ -52,13 +57,13 @@ router.get('/:uuid/cards', (req, res) => {
 })
 
 router.post('/', (req, res) => {
-    const path = dataManageMent.getProfilesPath()
-    fs.readFile(path, (err, data) => {
+    const path = dataManagement.getProfilesPath()
+    fs.readFile(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
         }
-        let jsonData = JSON.parse(data)
+        let data = JSON.parse(dataToBeParsed)
         let uuid = uuidv4()
         let newProfile = {
             id: uuid,
@@ -66,20 +71,48 @@ router.post('/', (req, res) => {
             description: req.body.description
 
         }
-        jsonData.profiles.push(newProfile)
-        fs.writeFile(path, JSON.stringify(jsonData, null, 2), (err) => {
+        data.profiles.push(newProfile)
+        fs.writeFile(path, JSON.stringify(data, null, 2), (err) => {
             if (err) {
                 res.status(500).send('Error writing data');
                 return;
             }
-            dataManageMent.createProfileConfig(uuid)
+            dataManagement.createProfileConfig(uuid)
             res.json(uuid);
         })
     })
 })
 
+router.post('/:uuid/cards', (req, res) => {
+    const path = dataManagement.getCardsPath(req.params.uuid)
+    fs.readFile(path, (err, dataToBeParsed) => {
+        if (err) {
+            res.status(500).send('Error reading data');
+            return;
+        }
+        let data = JSON.parse(dataToBeParsed)
+        let newCard = {
+            id: uuidv4().split('-')[0],
+            name: req.body.name,
+            question: req.body.question,
+            answer: req.body.answer,
+            question_image: req.body.question_image,
+            answer_image: req.body.answer_image
+        }
+        data.cards.push(newCard)
+        fs.writeFile(path, JSON.stringify(data, null, 2), (err) => {
+            if (err) {
+                res.status(500).send('Error writing data');
+                return;
+            }
+
+            res.status(200).send('Card is successfully added');
+        })
+    })
+})
+
 router.patch('/', (req, res) => {
-    const path = dataManageMent.getProfilesPath()
+    const path = dataManagement.getProfilesPath()
 
     fs.readFile(path, (err, dataToBeParsed) => {
         if (err) {
@@ -104,12 +137,12 @@ router.patch('/', (req, res) => {
         } else {
             res.status(402).send('Profile not found');
         }
-        
+
     })
 })
 
 router.delete('/:uuid', (req, res) => {
-    const path = dataManageMent.getProfilesPath()
+    const path = dataManagement.getProfilesPath()
 
     fs.readFile(path, (err, dataToBeParsed) => {
         if (err) {
@@ -129,14 +162,14 @@ router.delete('/:uuid', (req, res) => {
                     return;
                 }
 
-                dataManageMent.removeProfileConfig(uuid)
+                dataManagement.removeProfileConfig(uuid)
                 res.status(200).send('Profile is successfully removed');
             })
 
         } else {
             res.status(402).send('Profile not found');
         }
-        
+
     })
 })
 
