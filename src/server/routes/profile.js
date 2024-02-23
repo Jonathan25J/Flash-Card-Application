@@ -96,8 +96,8 @@ router.post('/:uuid/cards', (req, res) => {
             name: req.body.name,
             question: req.body.question,
             answer: req.body.answer,
-            question_image: req.body.question_image,
-            answer_image: req.body.answer_image
+            questionImage: req.body.questionImage,
+            answerImage: req.body.answerImage
         }
         data.cards.push(newCard)
         fs.writeFile(path, JSON.stringify(data, null, 2), (err) => {

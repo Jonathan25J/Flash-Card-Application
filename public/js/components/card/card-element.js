@@ -16,10 +16,10 @@ export class CardElement extends LitElement {
             answer: {
                 type: String
             },
-            question_image: {
+            questionImage: {
                 type: String
             },
-            answer_image: {
+            answerImage: {
                 type: String
             }
         }
@@ -31,8 +31,8 @@ export class CardElement extends LitElement {
         this.name = ''
         this.question = ''
         this.answer = ''
-        this.question_image = ''
-        this.answer_image = ''
+        this.questionImage = ''
+        this.answerImage = ''
     }
 
     connectedCallback() {
@@ -46,14 +46,14 @@ export class CardElement extends LitElement {
         this.name_element = this.shadowRoot.querySelector('#card-name')
         this.question_element = this.shadowRoot.querySelector('#card-question')
         this.answer_element = this.shadowRoot.querySelector('#card-answer')
-        this.question_image_element = this.shadowRoot.querySelector('#question-image')
-        this.answer_image_element = this.shadowRoot.querySelector('#answer-image')
+        this.questionImage_element = this.shadowRoot.querySelector('#question-image')
+        this.answerImage_element = this.shadowRoot.querySelector('#answer-image')
     }
 
     updated() {
         super.updated();
-        const questionImage = this.question_image_element
-        const answerImage = this.answer_image_element
+        const questionImage = this.questionImage_element
+        const answerImage = this.answerImage_element
         const questionImageContainer = this.shadowRoot.querySelector('.card-question-image')
         const answerImageContainer = this.shadowRoot.querySelector('.card-answer-image')
 
@@ -79,20 +79,20 @@ export class CardElement extends LitElement {
         this.name = ''
         this.question = ''
         this.answer = ''
-        this.question_image = ''
-        this.answer_image = ''
+        this.questionImage = ''
+        this.answerImage = ''
 
         this.shadowRoot.querySelectorAll('#card-name, #card-question, #card-answer').forEach(input => input.value = '');
-        this.question_image_element.src = ""
-        this.question_image_element.classList.remove('visible')
-        this.answer_image_element.src = ""
-        this.answer_image_element.classList.remove('visible')
+        this.questionImage_element.src = ""
+        this.questionImage_element.classList.remove('visible')
+        this.answerImage_element.src = ""
+        this.answerImage_element.classList.remove('visible')
         this.requestUpdate()
     }
 
     retrieve() {
-        const questionImage = this.question_image_element
-        const answerImage = this.answer_image_element
+        const questionImage = this.questionImage_element
+        const answerImage = this.answerImage_element
 
         this.name = this.name_element.value
         this.question = this.question_element.value
@@ -101,10 +101,10 @@ export class CardElement extends LitElement {
         let questionImageObject = new Image()
         questionImageObject.src = questionImage.src;
 
-        this.question_image = questionImage.src == window.location.href ? "" : questionImageObject
-        this.answer_image = answerImage.src == window.location.href ? "" : new Image().src == answerImage.src
+        this.questionImage = questionImage.src == window.location.href ? "" : questionImageObject
+        this.answerImage = answerImage.src == window.location.href ? "" : new Image().src == answerImage.src
 
-        return new Card(this.id, this.name, this.question, this.answer, this.question_image, this.answer_image)
+        return new Card(this.id, this.name, this.question, this.answer, this.questionImage, this.answerImage)
     }
 
     isValid() {
@@ -116,15 +116,15 @@ export class CardElement extends LitElement {
         this.name_element.value = card.name
         this.question_element.value = card.question
         this.answer_element.value = card.answer
-        this.question_image_element.src = card.question_image == undefined ? "" : card.question_image
-        this.answer_image_element.src = card.answer_image == undefined ? "" : card.answer_image
+        this.questionImage_element.src = card.questionImage == undefined ? "" : card.questionImage
+        this.answerImage_element.src = card.answerImage == undefined ? "" : card.answerImage
         this.requestUpdate()
     }
 
     render() {
         return html`<div class="container">
-        <img class="question-image" id=question-image src="${this.question_image}" alt="Question image">
-        <img class="answer-image" id=answer-image  src="${this.answer_image}"  alt="Answer image">
+        <img class="question-image" id=question-image src="${this.questionImage}" alt="Question image">
+        <img class="answer-image" id=answer-image  src="${this.answerImage}"  alt="Answer image">
         <div class="card">
         <div class="card-name">
         <label for="card-name">Name</label>
@@ -227,8 +227,8 @@ export class CardElement extends LitElement {
 
 
     _removeImage(e) {
-        const questionImage = this.question_image_element
-        const answerImage = this.answer_image_element
+        const questionImage = this.questionImage_element
+        const answerImage = this.answerImage_element
         if (e.target.id == 'c-q-i-remove-button') {
             questionImage.src = ""
             questionImage.classList.remove('visible')
