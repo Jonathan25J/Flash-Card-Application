@@ -1,27 +1,31 @@
 import { LitElement, css, html } from 'lit-element';
+import { profileController } from '../../operations/controllers/ProfileController.js';
 import '../container.js';
 export class CardViewer extends LitElement {
 
     static get properties() {
         return {
+            index: {
+                type: String
+            },
+            cards: {
+                type: Object
+            }
         }
     }
 
     constructor() {
         super()
-
-        this.instructions = {
-            direction: 'column',
-            rows: 3,
-            columns: 3,
-            containerRatio: [ 1,2, 3],
-            cellRatio: [1, 1, 1]
-        }
+        this.profileId = window.location.href.split('/')[4]
+        this.index = 0
     }
 
     connectedCallback() {
         super.connectedCallback();
-
+        profileController.getProfile(this.profileId).then((profile) => {
+            this.cards = profile.cards.sort(() => Math.random() - 0.5)
+            this._sendInstructions(this.cards[this.index])
+        })
     }
 
     firstUpdated() {
@@ -35,15 +39,38 @@ export class CardViewer extends LitElement {
     render() {
         return html`<div class="container">
         <div class="content">
-        <container-element instructions="${JSON.stringify(this.instructions)}">
-        <div slot="c1-r1" class="test red"></div>
-        <div slot="c1-r2" class="test blue"></div>
-        <div slot="c1-r3" class="test green"></div>
-        </container-element>
+        ${this.card}
         </div>
         <div class="options"></div>
         </div>
     `
+    }
+
+    _sendInstructions(card) {
+        this.slots = []
+        this.instructions = []
+        let question = card.question.trim().length > 0
+        let answer = card.answer.trim().length > 0
+        let questionImage = card.questionImage != ''
+        let answerImage = card.answerImage != ''
+
+        if (question && answer && !questionImage && !answerImage) {
+            this.instructions = {
+                direction: 'row',
+                rows: 3,
+                columns: 3,
+                containerRatio: [1, 0.5, 1],
+                cellRatio: [{1:[1, 2, 1]},{2:[1, 1, 1]},{3:[1, 2, 1]}]
+            }
+            this.slots.push(html`<div slot="r1-c2" class="slot align question"><p>${card.question}</p</div>`)
+            this.slots.push(html`<div slot="r3-c2" class="slot align"><textarea>${card.answer}</textarea></div>`)
+
+        }
+
+        let data = this.slots.map(slot => html`${slot}`)
+        let container = html`<container-element instructions="${JSON.stringify(this.instructions)}">${data}</container-element>`
+        this.card = container
+        this.requestUpdate()
     }
 
 
@@ -71,24 +98,31 @@ export class CardViewer extends LitElement {
             padding: 0.25rem 0rem 0.25rem 0rem;
         }
 
-        .test {
-            display: block;
+        .slot {
+            display: flex;
             height: 100%;
             width: 100%;
-
         }
 
-        .red {
-            background-color: red;
+        .align {
+            align-items: center;
+            justify-content: center;
         }
 
-        .blue {
-            background-color: blue;
+        .question {
+            font-size: 2rem;
+            color: white;
         }
 
-        .green {
-            background-color: green;
+        textarea {
+            height: 40%;
+            width: 80%;
+            text-align: center;
+            font-size: 1rem;
         }
+
+
+
 
 
         

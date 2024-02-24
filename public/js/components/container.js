@@ -25,7 +25,7 @@ export class ContainerElement extends LitElement {
         //     direction: 'column',
         //     rows: 3,
         //     columns: 3,
-        //     containerRatio: [ 1,2, 3],
+        //     containerRatio: [1, 2, 3],
         //     cellRatio: [
         //         { '1': [1, 2, 1] },
         //         { '2': [1, 1, 1] },
@@ -51,13 +51,18 @@ export class ContainerElement extends LitElement {
         super.disconnectedCallback();
     }
 
+    // updated() {
+    //     super.updated();
+    //     this.generate()
+    // }
+
     generate() {
         this.containers = []
         this.holders = []
         let direction = this.instructions.direction
-        let containers = (direction === 'row' ? this.instructions.rows : this.instructions.columns)
-
-        this.instructions.cellRatio = this._transformList(this.instructions.cellRatio, containers)
+        let containerCount = (direction === 'row' ? this.instructions.rows : this.instructions.columns)
+        let cellsCount = (direction === 'row' ? this.instructions.columns : this.instructions.rows)
+        this.instructions.cellRatio = this._transformList(this.instructions.cellRatio, containerCount, cellsCount )
 
         let directionContainer = direction == 'column' ? 'container-column' : 'container-row'
         let element1 = direction == 'column' ? 'columns' : 'rows';
@@ -82,12 +87,12 @@ export class ContainerElement extends LitElement {
     `
     }
 
-    _transformList(list, amount) {
+    _transformList(list, amount, validLength) {
         if (list.some(value => typeof value === 'object')) return list
         let newList = []
         for (let i = 1; i <= amount; i++) {
             let currentList = {}
-            currentList[i] = list.slice(0, amount)
+            currentList[i] = list.slice(0, validLength)
             newList.push(currentList);
         }
         return newList
