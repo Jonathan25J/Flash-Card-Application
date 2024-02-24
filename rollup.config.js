@@ -9,11 +9,12 @@ import css from "rollup-plugin-import-css";
 const copy = pkg;
 
 export default {
+    input: 'public/views/*.html',
     plugins: [
         // Entry point for application build; can specify a glob to build multiple
         // HTML files for non-SPA app
         html({
-            input: [path.join(path.resolve(), 'public/views/index.html'), path.join(path.resolve(), 'public/views/cards.html')],
+            rootDir: path.resolve(),
             transformHtml: [ html =>  html.replaceAll('src=".', 'src="/.') ],
             extractAssets: false,
         }), css(),

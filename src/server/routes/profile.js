@@ -4,6 +4,33 @@ import { v4 as uuidv4 } from 'uuid';
 import { dataManagement } from '../../utils/datamanagement.js';
 const router = Router()
 
+router.post('/', (req, res) => {
+    const path = dataManagement.getProfilesPath()
+    readData(path, (err, dataToBeParsed) => {
+        if (err) {
+            res.status(500).send('Error reading data');
+            return;
+        }
+        let data = JSON.parse(dataToBeParsed)
+        let uuid = uuidv4()
+        let newProfile = {
+            id: uuid,
+            title: req.body.title,
+            description: req.body.description
+
+        }
+        data.profiles.push(newProfile)
+        writeData(path, JSON.stringify(data, null, 2), (err) => {
+            if (err) {
+                res.status(500).send('Error writing data');
+                return;
+            }
+            dataManagement.createProfileConfig(uuid)
+            res.json(uuid);
+        })
+    })
+})
+
 router.get('/:uuid', (req, res) => {
     const profilesPath = dataManagement.getProfilesPath();
     const uuid = req.params.uuid;
@@ -61,31 +88,8 @@ router.get('/:uuid/cards', (req, res) => {
     res.render('cards.html')
 })
 
-router.post('/', (req, res) => {
-    const path = dataManagement.getProfilesPath()
-    readData(path, (err, dataToBeParsed) => {
-        if (err) {
-            res.status(500).send('Error reading data');
-            return;
-        }
-        let data = JSON.parse(dataToBeParsed)
-        let uuid = uuidv4()
-        let newProfile = {
-            id: uuid,
-            title: req.body.title,
-            description: req.body.description
-
-        }
-        data.profiles.push(newProfile)
-        writeData(path, JSON.stringify(data, null, 2), (err) => {
-            if (err) {
-                res.status(500).send('Error writing data');
-                return;
-            }
-            dataManagement.createProfileConfig(uuid)
-            res.json(uuid);
-        })
-    })
+router.get('/:uuid/practice', (req, res) => {
+    res.render('practice.html')
 })
 
 router.post('/:uuid/cards', (req, res) => {

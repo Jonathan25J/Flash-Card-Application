@@ -45,10 +45,10 @@ export class ProfileMenu extends LitElement {
         <button class="edit" @click="${this._createEditProfileMenu}">edit</button>
         </div>
         <div class="redirect">
-        <button class="cards"  @click="${this._redirectCards}">
+        <button class="cards" @click="${this._redirectCards}">
         <img src="/images/icons/cards-btn.png" alt="Edit cards">
         </button>
-        <button class="practice">
+        <button class="practice" @click="${this._redirectPractice}">
         <img src="/images/icons/practice-btn.png" alt="Practice">
         </button>
         </div>
@@ -121,6 +121,10 @@ export class ProfileMenu extends LitElement {
 
     _redirectCards() {
         window.location.href = `/profile/${this.id}/cards`
+    }
+
+    _redirectPractice() {
+        window.location.href = `/profile/${this.id}/practice`
     }
 
     static get styles() {
