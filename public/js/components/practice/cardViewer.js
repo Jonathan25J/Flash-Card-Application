@@ -28,9 +28,9 @@ export class CardViewer extends LitElement {
         return html`<div class="container">
         <div class="content">
         <container-element>
-        <div slot="c1-r1" class="test red"></div>
-        <div slot="c1-r2" class="test blue"></div>
-        <div slot="c1-r3" class="test green"></div>
+        <div slot="r1-c1" class="test red"></div>
+        <div slot="r1-c2" class="test blue"></div>
+        <div slot="r1-c3" class="test green"></div>
         </container-element>
         </div>
         <div class="options"></div>
