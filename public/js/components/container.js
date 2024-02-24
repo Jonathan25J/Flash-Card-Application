@@ -4,7 +4,7 @@ export class ContainerElement extends LitElement {
     static get properties() {
         return {
             instructions: {
-                Type: Object
+                type: Object, reflect: true
             }
         }
     }
@@ -12,14 +12,29 @@ export class ContainerElement extends LitElement {
     constructor() {
         super()
         // direction: row, cells = columns rows = rows, direction: columns, cells = rows
-        this.instructions = {
-            direction: 'row',
-            rows: 3,
-            columns: 3,
-            containerRatio: [1, 1, 1], 
-            cellRatio: [1, 1, 1]
-        }
+        // examples:
+        // this.instructions = {
+        //     direction: 'row',
+        //     rows: 3,
+        //     columns: 3,
+        //     containerRatio: [1, 1, 1], 
+        //     cellRatio: [1, 1, 1]
+        // }
+        
+        // this.instructions = {
+        //     direction: 'column',
+        //     rows: 3,
+        //     columns: 3,
+        //     containerRatio: [ 1,2, 3],
+        //     cellRatio: [
+        //         { '1': [1, 2, 1] },
+        //         { '2': [1, 1, 1] },
+        //         { '3': [1, 2, 1] }
+        //     ]
+        // }
+        this.instructions = {}
         this.containers = []
+        
     }
 
     connectedCallback() {
@@ -42,20 +57,19 @@ export class ContainerElement extends LitElement {
         let direction = this.instructions.direction
         let containers = (direction === 'row' ? this.instructions.rows : this.instructions.columns)
 
-        this.instructions.containerRatio = this._transformList(this.instructions.containerRatio, containers)
         this.instructions.cellRatio = this._transformList(this.instructions.cellRatio, containers)
 
         let directionContainer = direction == 'column' ? 'container-column' : 'container-row'
         let element1 = direction == 'column' ? 'columns' : 'rows';
         let element2 = direction == 'column' ? 'rows' : 'columns';
 
-
+        
         for (let i1 = 1; i1 < this.instructions[element1] + 1; i1++) {
             let cells = []
             for (let i2 = 1; i2 < this.instructions[element2] + 1; i2++) {
                 cells.push(html`<div class="slot-container" style="flex: ${this.instructions.cellRatio[i1 - 1][`${i1}`][i2 - 1]};"><slot name="${element1[0]}${i1}-${element2[0]}${i2}"></slot></div>`)
-            }
-            let holder = html`<div class="holder ${element1.slice(0, -1)}" style="flex: ${this.instructions.containerRatio[i1 - 1][`${i1}`][i1 - 1]};"> ${cells.map(cell => html`${cell}`)}</div>`
+            }   
+            let holder = html`<div class="holder ${element1.slice(0, -1)}" style="flex: ${this.instructions.containerRatio[i1 - 1]};"> ${cells.map(cell => html`${cell}`)}</div>`
             this.holders.push(holder)
         }
         this.containers = html`<div class="container ${directionContainer}">${this.holders.map(container => html`${container}`)}</div>`
@@ -69,7 +83,7 @@ export class ContainerElement extends LitElement {
     }
 
     _transformList(list, amount) {
-        if (!Array.isArray(list)) return list
+        if (list.some(value => typeof value === 'object')) return list
         let newList = []
         for (let i = 1; i <= amount; i++) {
             let currentList = {}

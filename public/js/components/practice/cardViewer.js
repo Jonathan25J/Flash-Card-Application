@@ -9,6 +9,14 @@ export class CardViewer extends LitElement {
 
     constructor() {
         super()
+
+        this.instructions = {
+            direction: 'column',
+            rows: 3,
+            columns: 3,
+            containerRatio: [ 1,2, 3],
+            cellRatio: [1, 1, 1]
+        }
     }
 
     connectedCallback() {
@@ -27,10 +35,10 @@ export class CardViewer extends LitElement {
     render() {
         return html`<div class="container">
         <div class="content">
-        <container-element>
-        <div slot="r1-c1" class="test red"></div>
-        <div slot="r1-c2" class="test blue"></div>
-        <div slot="r1-c3" class="test green"></div>
+        <container-element instructions="${JSON.stringify(this.instructions)}">
+        <div slot="c1-r1" class="test red"></div>
+        <div slot="c1-r2" class="test blue"></div>
+        <div slot="c1-r3" class="test green"></div>
         </container-element>
         </div>
         <div class="options"></div>
