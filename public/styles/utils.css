@@ -68,12 +68,15 @@
     }
 }
 
+
 html,
 body {
     height: 100%;
 }
 
 body {
+    display: flex;
+    flex-direction: column;
     margin: 0;
 }
 
@@ -83,7 +86,8 @@ body {
 }
 
 main {
-    height: 80%;
+    flex: 1;
+    overflow: auto;
 }
 
 .header {
