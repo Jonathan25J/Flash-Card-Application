@@ -12,7 +12,8 @@ export const makers = [
   {
     name: '@electron-forge/maker-squirrel',
     config: {
-      setupIcon: path.join(path.resolve(), 'icon.ico')
+      setupIcon: path.join(path.resolve(), 'icon.ico'),
+      iconUrl: path.join(path.resolve(), 'icon.ico')
     },
   },
   {

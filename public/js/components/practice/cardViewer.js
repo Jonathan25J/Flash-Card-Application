@@ -98,6 +98,7 @@ export class CardViewer extends LitElement {
         if (count == 1) {
             this.instructions.rows = 1
             this.instructions.containerRatio = [1]
+            this.instructions.cellRatio = [1, 3, 1]
             this.slots.push(html`<div slot="r1-c2" class="slot align">${elements[0]}</div>`)
         }
 
@@ -133,6 +134,7 @@ export class CardViewer extends LitElement {
         let container = html`<container-element instructions="${JSON.stringify(this.instructions)}">${data}</container-element>`
         this.card = container
         this.requestUpdate()
+        this._updateContainer()
     }
 
     _createElementsList(question, answer, questionImage, answerImage, card) {
@@ -164,7 +166,12 @@ export class CardViewer extends LitElement {
         this.index = this.index + 1
         this.revealed = false
         this._sendInstructions(this.cards[this.index])
-        this.shadowRoot.querySelector('container-element').requestUpdate()
+    }
+
+    _updateContainer() {
+        let container = this.shadowRoot.querySelector('container-element')
+        if (container)
+            container.requestUpdate()
     }
 
 

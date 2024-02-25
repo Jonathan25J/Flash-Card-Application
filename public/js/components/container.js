@@ -51,9 +51,9 @@ export class ContainerElement extends LitElement {
         super.disconnectedCallback();
     }
 
-    updated() {
-        super.updated();
+    update(changedProperties) {
         this.generate()
+        super.update(changedProperties);
     }
 
     generate() {
