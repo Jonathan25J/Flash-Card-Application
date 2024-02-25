@@ -1,7 +1,7 @@
 # Flash Cards Application
 ## Made with Electron and Express
 
-<div style="display: flex; gap: 50px;">
+<div style="display: flex; gap: 50px; justify-content: space-evenly;">
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Electron_Software_Framework_Logo.svg/2048px-Electron_Software_Framework_Logo.svg.png" width= 150 height= 150>
 <img src="https://miro.medium.com/v2/resize:fit:1400/1*XP-mZOrIqX7OsFInN2ngRQ.png" width= 300 height=150>
 </div>
