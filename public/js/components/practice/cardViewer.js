@@ -10,6 +10,9 @@ export class CardViewer extends LitElement {
             },
             cards: {
                 type: Object
+            },
+            revealed: {
+                type: Boolean, reflect: true
             }
         }
     }
@@ -18,12 +21,14 @@ export class CardViewer extends LitElement {
         super()
         this.profileId = window.location.href.split('/')[4]
         this.index = 0
+        this.revealed = false
     }
 
     connectedCallback() {
         super.connectedCallback();
         profileController.getProfile(this.profileId).then((profile) => {
             this.cards = profile.cards.sort(() => Math.random() - 0.5)
+            this.cardsLength = this.cards.length -1
             this._sendInstructions(this.cards[this.index])
         })
     }
@@ -41,7 +46,18 @@ export class CardViewer extends LitElement {
         <div class="content">
         ${this.card}
         </div>
-        <div class="options"></div>
+        <div class="options">
+        <a href="" @click="${this._previousCard}" style="visibility: ${this.index == 0 ? 'hidden' : ''}">
+        <img src="/images/icons/left-btn.png" alt="Go to previous card">
+        </a>
+        <a href="" @click="${this._revealAnswer}" ?hidden="${this.revealed}">
+        <img src="/images/icons/reveal-btn.png" alt="Reveal answer">
+        </a>
+        <a href="" @click="${this._nextCard}" style="visibility: ${this.index ==  this.cardsLength ? 'hidden' : ''}">
+        <img src="/images/icons/right-btn.png" alt="Go to next card">
+        </a>
+        </div>
+        <div class="bar"></div>
         </div>
     `
     }
@@ -60,7 +76,7 @@ export class CardViewer extends LitElement {
                 rows: 3,
                 columns: 3,
                 containerRatio: [1, 0.5, 1],
-                cellRatio: [{1:[1, 2, 1]},{2:[1, 1, 1]},{3:[1, 2, 1]}]
+                cellRatio: [{1:[1, 2, 1]},{2:[0.5, 1, 0.5]},{3:[1, 2, 1]}]
             }
             this.slots.push(html`<div slot="r1-c2" class="slot align question"><p>${card.question}</p</div>`)
             this.slots.push(html`<div slot="r3-c2" class="slot align"><textarea>${card.answer}</textarea></div>`)
@@ -73,6 +89,25 @@ export class CardViewer extends LitElement {
         this.requestUpdate()
     }
 
+    _previousCard(e) {
+        e.preventDefault()
+        if (this.index - 1 < 0) return
+        this.index = this.index - 1
+        this._sendInstructions(this.cards[this.index])
+    }
+
+    _revealAnswer(e) {
+        e.preventDefault()
+        this.revealed = !this.revealed
+    }
+
+    _nextCard(e) {
+        e.preventDefault()
+        if (this.index + 1 >= this.cards.length) return
+        this.index = this.index + 1
+        this._sendInstructions(this.cards[this.index])
+    }
+
 
     static get styles() {
         return css`
@@ -81,6 +116,7 @@ export class CardViewer extends LitElement {
             flex-direction: column;
             height: 100%;
             width: 100%;
+            position: relative;
             background-color: rgba(0, 0, 0, 0.5);
             border-radius: 0.5rem;
             overflow-y: auto;
@@ -92,6 +128,29 @@ export class CardViewer extends LitElement {
         }
 
         .options {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: absolute;
+            width: 100%;
+            height: 5rem;
+            top: 40%;
+
+        }
+
+        .options a {
+            width: 3.5rem;
+            height: 3.5rem;
+            margin: 0rem 1rem 0rem 1rem
+        }
+
+        .options img {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .bar {
             height: 3.75rem;
             border-radius: 0.5rem;
             background-color: rgba(0, 0, 0, 0.4);
