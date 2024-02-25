@@ -66,17 +66,20 @@ export class CardsSwitcher extends LitElement {
     }
 
     _retrieveCards() {
-        this.options = []
         profileController.getProfile(this.profileId).then((profile) => {
+            this.options = []
+            this.cards = []
             this.cards = profile.cards
             for (let cardIteration in profile.cards) {
                 let card = profile.cards[cardIteration]
                 const cardOption = html` <option value=${card.id}>${card.name}</option>`
                 this.options = [...this.options, cardOption]
             }
+            
             this.requestUpdate()
-        }).catch(() => {
-            location.reload()
+        }).catch((err) => {
+            if (err.response && err.response.status !== 402)
+                location.reload()
         })
     }
 
@@ -93,11 +96,15 @@ export class CardsSwitcher extends LitElement {
     }
 
     _addCard() {
-        profileController.addCard(this.profileId, this.currentCard)
+        profileController.addCard(this.profileId, this.currentCard).then(() => {
+            this._retrieveCards()
+        })
     }
 
     _updateCard() {
-        profileController.updateCard(this.profileId, this.currentCard)
+        profileController.updateCard(this.profileId, this.currentCard).then(() => {
+            this._retrieveCards()
+        })
     }
 
     _newCard(e) {

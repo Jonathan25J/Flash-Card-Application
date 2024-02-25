@@ -46,10 +46,6 @@ function handleSquirrelEvent() {
             spawnUpdate(['--createShortcut', exeName]);
             return true;
         case '--squirrel-updated':
-            // Optionally do things such as:
-            // - Add your .exe to the PATH
-            // - Write to the registry for things like file associations and
-            //   explorer context menus
 
             // Install desktop and start menu shortcuts
             spawnUpdate(['--createShortcut', exeName]);
@@ -58,8 +54,6 @@ function handleSquirrelEvent() {
             return true;
 
         case '--squirrel-uninstall':
-            // Undo anything you did in the --squirrel-install and
-            // --squirrel-updated handlers
 
             // Remove desktop and start menu shortcuts
             spawnUpdate(['--removeShortcut', exeName]);
@@ -68,10 +62,7 @@ function handleSquirrelEvent() {
             return true;
 
         case '--squirrel-obsolete':
-            // This is called on the outgoing version of your app before
-            // we update to the new version - it's the opposite of
-            // --squirrel-updated
-
+            
             app.quit();
             return true;
     }
@@ -82,9 +73,10 @@ app.whenReady().then(() => {
     const window = new BrowserWindow({
         height: 600,
         width: 800,
-        // autoHideMenuBar: true,
+        autoHideMenuBar: true,
         // useContentSize: true,
         // resizable: false,
+        icon: path.join(path.resolve(), 'icon.ico'),
         webPreferences: {
             nodeIntegration: true,
             preload: path.join(path.resolve(), 'src/preload.js')
