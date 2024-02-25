@@ -28,6 +28,7 @@ export class HomeButton extends LitElement {
             left: 1.5rem;
             height: 4rem;
             width: 4rem;
+            z-index: 666;
         }
 
         .home-btn img {

@@ -51,10 +51,10 @@ export class ContainerElement extends LitElement {
         super.disconnectedCallback();
     }
 
-    // updated() {
-    //     super.updated();
-    //     this.generate()
-    // }
+    updated() {
+        super.updated();
+        this.generate()
+    }
 
     generate() {
         this.containers = []
@@ -72,9 +72,9 @@ export class ContainerElement extends LitElement {
         for (let i1 = 1; i1 < this.instructions[element1] + 1; i1++) {
             let cells = []
             for (let i2 = 1; i2 < this.instructions[element2] + 1; i2++) {
-                cells.push(html`<div class="slot-container" style="flex: ${this.instructions.cellRatio[i1 - 1][`${i1}`][i2 - 1]};"><slot name="${element1[0]}${i1}-${element2[0]}${i2}"></slot></div>`)
+                cells.push(html`<div class="slot-container" style="flex: ${this.instructions.cellRatio[i1 - 1][`${i1}`][i2 - 1]} 0 0;"><slot name="${element1[0]}${i1}-${element2[0]}${i2}"></slot></div>`)
             }   
-            let holder = html`<div class="holder ${element1.slice(0, -1)}" style="flex: ${this.instructions.containerRatio[i1 - 1]};"> ${cells.map(cell => html`${cell}`)}</div>`
+            let holder = html`<div class="holder ${element1.slice(0, -1)}" style="flex: ${this.instructions.containerRatio[i1 - 1]} 0 0;"> ${cells.map(cell => html`${cell}`)}</div>`
             this.holders.push(holder)
         }
         this.containers = html`<div class="container ${directionContainer}">${this.holders.map(container => html`${container}`)}</div>`
@@ -133,6 +133,8 @@ export class ContainerElement extends LitElement {
         .holder {
             display: flex;
             flex: 1;
+            min-width: 0;
+            min-height: 0;
         }
 
         slot {

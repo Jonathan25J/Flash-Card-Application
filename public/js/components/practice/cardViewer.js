@@ -28,7 +28,8 @@ export class CardViewer extends LitElement {
         super.connectedCallback();
         profileController.getProfile(this.profileId).then((profile) => {
             this.cards = profile.cards.sort(() => Math.random() - 0.5)
-            this.cardsLength = this.cards.length -1
+            this.cardsLength = this.cards.length - 1
+            if (this.cardsLength == -1) return
             this._sendInstructions(this.cards[this.index])
         })
     }
@@ -39,6 +40,21 @@ export class CardViewer extends LitElement {
 
     disconnectedCallback() {
         super.disconnectedCallback();
+    }
+
+    updated() {
+        super.updated();
+        if (this.cardsLength == -1) this.shadowRoot.querySelector('.options').style.display = 'none'
+
+        this.shadowRoot.querySelectorAll('.slot').forEach((node) => node.querySelectorAll('.answer').forEach((node) => {
+            if (this.revealed) {
+                node.removeAttribute('hidden');
+                node.classList.add('visible')
+            } else {
+                node.setAttribute('hidden', '');
+                node.classList.remove('visible')
+            }
+        }))
     }
 
     render() {
@@ -53,7 +69,7 @@ export class CardViewer extends LitElement {
         <a href="" @click="${this._revealAnswer}" ?hidden="${this.revealed}">
         <img src="/images/icons/reveal-btn.png" alt="Reveal answer">
         </a>
-        <a href="" @click="${this._nextCard}" style="visibility: ${this.index ==  this.cardsLength ? 'hidden' : ''}">
+        <a href="" @click="${this._nextCard}" style="visibility: ${this.index == this.cardsLength ? 'hidden' : ''}">
         <img src="/images/icons/right-btn.png" alt="Go to next card">
         </a>
         </div>
@@ -64,22 +80,52 @@ export class CardViewer extends LitElement {
 
     _sendInstructions(card) {
         this.slots = []
-        this.instructions = []
+        this.card = []
+        this.instructions = {
+            direction: 'row',
+            rows: 3,
+            columns: 3,
+            containerRatio: [1, 0.25, 1],
+            cellRatio: [1, 1.25, 1]
+        }
         let question = card.question.trim().length > 0
         let answer = card.answer.trim().length > 0
         let questionImage = card.questionImage != ''
         let answerImage = card.answerImage != ''
+        let elements = this._createElementsList(question, answer, questionImage, answerImage, card)
+        let count = elements.length
 
-        if (question && answer && !questionImage && !answerImage) {
-            this.instructions = {
-                direction: 'row',
-                rows: 3,
-                columns: 3,
-                containerRatio: [1, 0.5, 1],
-                cellRatio: [{1:[1, 2, 1]},{2:[0.5, 1, 0.5]},{3:[1, 2, 1]}]
+        if (count == 1) {
+            this.instructions.rows = 1
+            this.instructions.containerRatio = [1]
+            this.slots.push(html`<div slot="r1-c2" class="slot align">${elements[0]}</div>`)
+        }
+
+        if (count == 2) {
+            this.slots.push(html`<div slot="r1-c2" class="slot align">${elements[0]}</div>`)
+            this.slots.push(html`<div slot="r3-c2" class="slot align">${elements[1]}</div>`)
+
+        }
+
+        if (count == 3) {
+            if (question && questionImage) {
+                this.slots.push(html`<div slot="r1-c2" class="slot align">${elements[0]}</div>`)
+                this.slots.push(html`<div slot="r1-c1" class="slot align">${elements[1]}</div>`)
+                this.slots.push(html`<div slot="r3-c2" class="slot align">${elements[2]}</div>`)
             }
-            this.slots.push(html`<div slot="r1-c2" class="slot align question"><p>${card.question}</p</div>`)
-            this.slots.push(html`<div slot="r3-c2" class="slot align"><textarea>${card.answer}</textarea></div>`)
+
+            if (answer && answerImage) {
+                this.slots.push(html`<div slot="r1-c2" class="slot align">${elements[0]}</div>`)
+                this.slots.push(html`<div slot="r3-c2" class="slot align">${elements[1]}</div>`)
+                this.slots.push(html`<div slot="r3-c3" class="slot align">${elements[2]}</div>`)
+            }
+        }
+
+        if (count == 4) {
+            this.slots.push(html`<div slot="r1-c2" class="slot align">${elements[0]}</div>`)
+            this.slots.push(html`<div slot="r1-c1" class="slot align">${elements[1]}</div>`)
+            this.slots.push(html`<div slot="r3-c2" class="slot align">${elements[2]}</div>`)
+            this.slots.push(html`<div slot="r3-c3" class="slot align">${elements[3]}</div>`)
 
         }
 
@@ -89,23 +135,36 @@ export class CardViewer extends LitElement {
         this.requestUpdate()
     }
 
+    _createElementsList(question, answer, questionImage, answerImage, card) {
+        let elements = []
+        if (question) elements.push(html`<p class="question">${card.question}</p>`)
+        if (questionImage) elements.push(html`<img class="visible" src="${card.questionImage}" alt="Question image">`)
+        if (answer) elements.push(html`<textarea class="answer">${card.answer}</textarea>`)
+        if (answerImage) elements.push(html`<img class="answer" src="${card.answerImage}" alt="Answer image">`)
+        return elements
+    }
+
     _previousCard(e) {
         e.preventDefault()
         if (this.index - 1 < 0) return
         this.index = this.index - 1
+        this.revealed = false
         this._sendInstructions(this.cards[this.index])
     }
 
     _revealAnswer(e) {
         e.preventDefault()
         this.revealed = !this.revealed
+        this.requestUpdate()
     }
 
     _nextCard(e) {
         e.preventDefault()
         if (this.index + 1 >= this.cards.length) return
         this.index = this.index + 1
+        this.revealed = false
         this._sendInstructions(this.cards[this.index])
+        this.shadowRoot.querySelector('container-element').requestUpdate()
     }
 
 
@@ -134,7 +193,7 @@ export class CardViewer extends LitElement {
             position: absolute;
             width: 100%;
             height: 5rem;
-            top: 40%;
+            top: 41.5%;
 
         }
 
@@ -179,6 +238,21 @@ export class CardViewer extends LitElement {
             text-align: center;
             font-size: 1rem;
         }
+
+        .slot img {
+            display: none;
+            width: 90%;
+            height: 90%; 
+            border-radius: 0.5rem;
+        }
+
+        @media (min-width: 1280px) {
+
+            .visible {
+                display: block !important;
+            }
+        }
+        
 
 
 
