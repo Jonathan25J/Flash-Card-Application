@@ -130,6 +130,8 @@ export class CardViewer extends LitElement {
 
         }
 
+
+        if (question && count == 1 || questionImage && count == 1 ) this.revealed = true
         let data = this.slots.map(slot => html`${slot}`)
         let container = html`<container-element instructions="${JSON.stringify(this.instructions)}">${data}</container-element>`
         this.card = container
