@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import fs from 'fs';
+import lockfile from 'proper-lockfile';
 import { v4 as uuidv4 } from 'uuid';
 import { dataManagement } from '../../utils/datamanagement.js';
 const router = Router()
@@ -265,28 +266,54 @@ router.delete('/:uuid/cards/:cardId', (req, res) => {
     })
 })
 
-
-
 function readData(filePath, callback) {
-    fs.readFile(filePath, { flag: 'r' }, (err, data) => {
-        if (err) {
-            return callback(err);
-        }
+    lockfile.lock(filePath, { retries: { retries: 5, minTimeout: 100 } })
+        .then((release) => {
+            fs.readFile(filePath, (err, data) => {
+                release((releaseErr) => {
+                    if (releaseErr) {
+                        console.error('Failed to release the lock:', releaseErr);
+                        return callback(releaseErr);
+                    }
+                });
 
-        callback(null, data);
-    });
+                if (err) {
+                    console.error('Failed to read file:', err);
+                    return callback(err);
+                }
+                
+                callback(null, data);
+            });
+        })
+        .catch((err) => {
+            console.error('Failed to acquire the lock:', err);
+            callback(err);
+        });
 }
 
-// Function to write JSON data to file with file locking
 function writeData(filePath, data, callback) {
-    fs.writeFile(filePath, data, { flag: 'w' }, (err) => {
-        if (err) {
-            return callback(err);
-        }
-        callback(null);
-    });
+    lockfile.lock(filePath, { retries: { retries: 5, minTimeout: 100 } })
+        .then((release) => {
+            fs.writeFile(filePath, data, (err) => {
+                release((releaseErr) => {
+                    if (releaseErr) {
+                        console.error('Failed to release the lock:', releaseErr);
+                        return callback(releaseErr);
+                    }
+                });
+
+                if (err) {
+                    console.error('Failed to write file:', err);
+                    return callback(err);
+                }
+
+                callback(null);
+            });
+        })
+        .catch((err) => {
+            console.error('Failed to acquire the lock:', err);
+            callback(err);
+        });
 }
-
-
 
 export default router
