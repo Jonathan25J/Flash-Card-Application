@@ -17,7 +17,6 @@ It's also possible to use the application in the browser:
 http://localhost:54789/
 ```
 
-Data is stored in the ```resources/data folder``` inside the application with new setup.exe's you need manually copy/paste your data.
 This is a remake of an already existing project: https://github.com/Jonathan25J/Java-Sheets
 
 # Images
