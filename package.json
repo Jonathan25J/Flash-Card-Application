@@ -1,6 +1,6 @@
 {
   "name": "flash-cards-application",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Jonaqhan",
   "description": "Flash Cards Application that can be used for learning",
   "main": "src/main.js",
@@ -27,12 +27,14 @@
     "@web/rollup-plugin-html": "^2.1.2",
     "electron": "^28.2.3",
     "electron-packager": "^17.1.2",
+    "eslint": "^8.56.0",
     "nodemon": "^3.0.3",
     "rollup": "^4.12.0",
     "rollup-plugin-copy": "^3.5.0",
     "rollup-watch": "^3.2.2"
   },
   "dependencies": {
+    "@electron-toolkit/utils": "^3.0.0",
     "@rollup/plugin-multi-entry": "^6.0.1",
     "@rollup/plugin-terser": "^0.4.4",
     "@web/rollup-plugin-copy": "^0.5.1",
