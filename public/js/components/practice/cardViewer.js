@@ -261,6 +261,7 @@ export class CardViewer extends LitElement {
             width: 80%;
             text-align: center;
             font-size: 1rem;
+            border-radius: 0.5rem;
         }
 
         .slot img {
