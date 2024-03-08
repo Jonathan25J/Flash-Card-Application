@@ -22,8 +22,12 @@ export class ThemeSwitcher extends LitElement {
         this.root.classList = []
 
         this.ws.onmessage = (e) => {
-            this.root.classList = [];
-            this.root.classList.add(e.data);
+            this.root.classList.forEach(className => {
+                if (className.startsWith('theme-')) {
+                    this.root.classList.remove(className)
+                }
+            })
+            this.root.classList.add(`theme-${e.data}`)
             this.themeSwitcher.value = e.data;
 
         };
@@ -48,7 +52,7 @@ export class ThemeSwitcher extends LitElement {
                 this.ws.send(JSON.stringify({ type: 'set', location: 'theme', value: theme }));
                 this.setTheme()
             }}">
-        ${this.options.map(option => html`<option value=${option}>${option}</option>`)}
+        ${this.options.map(option => html`<option value=${option}>${option.replace('-', ' ')}</option>`)}
         </select>
         </div>
     `
@@ -72,7 +76,7 @@ export class ThemeSwitcher extends LitElement {
             position: absolute;
             left: 2rem;
             top: 2rem;
-            width: 5rem;
+            width: 6rem;
             height: 3rem;
             border-radius: 0.5rem;
         }

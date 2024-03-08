@@ -132,7 +132,7 @@ export class ProfileMenu extends LitElement {
         .container {
             height: 100%;
             width: 100%;
-            background-color: white;
+            background-color: var(--clr-menu-cnt);
         }
 
         .menu {
@@ -160,7 +160,7 @@ export class ProfileMenu extends LitElement {
         .redirect button {
             width: 5rem;
             height: 5rem;
-            background-color: #67a4ff;
+            background-color: var(--clr-menu-btn);
             border-radius: 2.5rem;
         }
 

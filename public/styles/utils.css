@@ -78,6 +78,8 @@ body {
     display: flex;
     flex-direction: column;
     margin: 0;
+    background-image: var(--clr-primary-bg);
+    background-repeat: no-repeat;
 }
 
 * {
@@ -95,7 +97,7 @@ main {
     align-items: center;
     justify-content: center;
     font-size: 2rem;
-    color: var(--foreground-color);
+    color: var(--clr-header);
     font-family: 'Courier New', monospace;
     padding-top: 0.5rem;
 }

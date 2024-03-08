@@ -1,11 +1,29 @@
 :root {
-    --background-first-color: #74ebd5;
-    --background-second-color: #9face6;
-    --background-image: linear-gradient(to right, var(--background-first-color) 0%, var(--background-second-color) 100%);
-    --foreground-color: white;
+    --clr-bg-first: #74ebd5;
+    --clr-bg-second: #9face6;
+    --clr-primary-bg: linear-gradient(to right, var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-header: white;
+
+    --clr-menu: #ededed;
+    --clr-menu-cnt: white;
+    --clr-menu-btn: #67a4ff;
+    --clr-menu-input: #c9dcff;
+
+    --clr-profile-bg: linear-gradient(rgb(255, 255, 255) 0%, rgb(189, 189, 189) 80%);
+    --clr-profile-line: #5b5b5b;
 }
 
-body {
-    background-image: var(--background-image);
-    background-repeat: no-repeat;
+.theme-night-fade {
+    --clr-bg-first: #a18cd1;
+    --clr-bg-second: #fbc2eb;
+    --clr-primary-bg: linear-gradient(to top, var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-header: #674a61;
+
+    --clr-menu: #f5bae5;
+    --clr-menu-cnt: #ffd9f4;
+    --clr-menu-btn: #a18cd1;
+    --clr-menu-input: #ffc8f5;
+
+    --clr-profile-bg: linear-gradient(rgb(246 191 234) 0%, rgb(169 144 211) 80%);
+    --clr-profile-line: #5c4965;
 }
