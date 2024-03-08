@@ -252,6 +252,8 @@ export class CardViewer extends LitElement {
         .question {
             font-size: 2rem;
             color: white;
+            text-align: center;
+            line-height: 2.5rem;
         }
 
         textarea {

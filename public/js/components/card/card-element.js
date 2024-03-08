@@ -180,6 +180,11 @@ export class CardElement extends LitElement {
             if (item.type.indexOf('image') !== -1) {
                 let blob = item.getAsFile();
 
+                if (item.type === 'image/svg+xml') {
+                    const svg = `...`
+                    blob = new Blob([svg], {type: 'image/svg+xml'})
+                } 
+
                 const reader = new FileReader();
 
                 reader.onload = (e) => {
