@@ -69,7 +69,7 @@ export class ProfileMenu extends LitElement {
 
     _createEditProfileMenu() {
         const modal = document.createElement('modal-widget')
-        modal.setForm("edit profile", this._createForm())
+        modal.setContent("edit profile", this._createForm())
     }
 
     _deleteProfile() {

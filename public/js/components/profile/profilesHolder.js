@@ -54,7 +54,7 @@ export class ProfilesHolder extends LitElement {
     _showModal(e) {
         e.preventDefault();
         const modal = document.createElement('modal-widget')
-        modal.setForm("create profile", this._createForm())
+        modal.setContent("create profile", this._createForm())
     }
 
     _addProfile(title, description) {

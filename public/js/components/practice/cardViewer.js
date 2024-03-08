@@ -1,6 +1,7 @@
 import { LitElement, css, html } from 'lit-element';
 import { profileController } from '../../operations/controllers/ProfileController.js';
 import '../container.js';
+import '../modal.js';
 export class CardViewer extends LitElement {
 
     static get properties() {
@@ -98,15 +99,20 @@ export class CardViewer extends LitElement {
         if (count == 1) {
             this.instructions.rows = 1
             this.instructions.containerRatio = [1]
-            this.instructions.cellRatio = [1, 3, 1]
+            this.instructions.cellRatio = [1, 4, 1]
             this.slots.push(html`<div slot="r1-c2" class="slot align">${elements[0]}</div>`)
         }
 
         if (count == 2) {
+            this.instructions.cellRatio = [1, 3, 1]
             this.slots.push(html`<div slot="r1-c2" class="slot align">${elements[0]}</div>`)
             this.slots.push(html`<div slot="r3-c2" class="slot align">${elements[1]}</div>`)
 
+            if (question && answer) {
+                this.instructions.cellRatio = [1, 2, 1]
+            }
         }
+
 
         if (count == 3) {
             if (question && questionImage) {
@@ -142,9 +148,9 @@ export class CardViewer extends LitElement {
     _createElementsList(question, answer, questionImage, answerImage, card) {
         let elements = []
         if (question) elements.push(html`<p class="question">${card.question}</p>`)
-        if (questionImage) elements.push(html`<img class="visible" src="${card.questionImage}" alt="Question image">`)
+        if (questionImage) elements.push(html`<img class="visible" @click="${this._displayImage}" src="${card.questionImage}" alt="Question image">`)
         if (answer) elements.push(html`<textarea class="answer">${card.answer}</textarea>`)
-        if (answerImage) elements.push(html`<img class="answer" src="${card.answerImage}" alt="Answer image">`)
+        if (answerImage) elements.push(html`<img class="answer" @click="${this._displayImage}" src="${card.answerImage}" alt="Answer image">`)
         return elements
     }
 
@@ -176,6 +182,11 @@ export class CardViewer extends LitElement {
             container.requestUpdate()
     }
 
+    _displayImage(e) {
+        const modal = document.createElement('modal-widget')
+        modal.setContent("Image viewer", html`<div class="image">${e.target.cloneNode(true)}</div>`)
+    }
+
 
     static get styles() {
         return css`
@@ -203,13 +214,15 @@ export class CardViewer extends LitElement {
             width: 100%;
             height: 5rem;
             top: 41.5%;
+            pointer-events: none;
 
         }
 
         .options a {
             width: 3.5rem;
             height: 3.5rem;
-            margin: 0rem 1rem 0rem 1rem
+            margin: 0rem 1rem 0rem 1rem;
+            pointer-events: auto;
         }
 
         .options img {
@@ -250,8 +263,8 @@ export class CardViewer extends LitElement {
 
         .slot img {
             display: none;
-            width: 90%;
-            height: 90%; 
+            max-width: 90%;
+            max-height: 90%; 
             border-radius: 0.5rem;
         }
 
