@@ -52,7 +52,7 @@ export class Modal extends LitElement {
     `
     }
 
-    setForm(title, content) {
+    setContent(title, content) {
         this.slot = false
         this.title = title
         this.content = content
@@ -112,6 +112,7 @@ export class Modal extends LitElement {
             align-items: center;
             justify-content: center;
             height: 100%;
+            overflow: hidden;
         }
 
         .menu {
@@ -226,6 +227,21 @@ export class Modal extends LitElement {
             font-size: 1.2rem;
             font-family: emoji;
             text-align: center;
+        }
+
+        .image {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(37, 37, 37);
+        }
+
+        .image img {
+            display: block;
+            max-width: 90%;
+            max-height: 90%;
         }
 
         @media (min-width: 475px) {
