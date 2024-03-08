@@ -8,9 +8,10 @@
     --clr-menu-cnt: white;
     --clr-menu-btn: #67a4ff;
     --clr-menu-input: #c9dcff;
+    --clr-menu-border: var(--clr-bg-second);
 
-    --clr-profile-bg: linear-gradient(rgb(255, 255, 255) 0%, rgb(189, 189, 189) 80%);
-    --clr-profile-line: #5b5b5b;
+    --clr-profile-bg: linear-gradient(#74ebd5 0%, #94a3e9 85%);
+    --clr-profile-line: #627097;
 }
 
 .theme-night-fade {
@@ -23,7 +24,72 @@
     --clr-menu-cnt: #ffd9f4;
     --clr-menu-btn: #a18cd1;
     --clr-menu-input: #ffc8f5;
+    --clr-menu-border: var(--clr-bg-second);
 
     --clr-profile-bg: linear-gradient(rgb(246 191 234) 0%, rgb(169 144 211) 80%);
     --clr-profile-line: #5c4965;
+}
+
+.theme-deep-blue {
+    --clr-bg-first: #e0c3fc;
+    --clr-bg-second: #8ec5fc;
+    --clr-primary-bg: linear-gradient(120deg, var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-header: #674a61;
+
+    --clr-menu: #9cc4eb;
+    --clr-menu-cnt: #b2d7fb;
+    --clr-menu-btn: #659dd5;
+    --clr-menu-input: #e7eef5;
+    --clr-menu-border: var(--clr-bg-second);
+
+    --clr-profile-bg: linear-gradient(var(--clr-bg-first) 0%, var(--clr-bg-second) 80%);
+    --clr-profile-line: #7b9ccf;
+}
+
+.theme-chrome {
+    --clr-bg-first: #00dbde;
+    --clr-bg-second: #fc00ff;
+    --clr-primary-bg: linear-gradient(to right, var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-header: #030303;
+
+    --clr-menu: #56b4bb;
+    --clr-menu-cnt: #71c5cb;
+    --clr-menu-btn: #56b4bb;
+    --clr-menu-input: #5debed;
+    --clr-menu-border: #4b81d1;
+
+    --clr-profile-bg: linear-gradient(var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-profile-line: #533b8f;
+}
+
+.theme-dense-waters {
+    --clr-bg-first: #3ab5b0;
+    --clr-bg-second: #56317a;
+    --clr-primary-bg: linear-gradient(to right, var(--clr-bg-first) 0%, #3d99be 31%, var(--clr-bg-second) 100%);
+    --clr-header: #030303;
+
+    --clr-menu: #196d8f;
+    --clr-menu-cnt: #2690bb;
+    --clr-menu-btn: #05678f;
+    --clr-menu-input: #66c2e7;
+    --clr-menu-border: #0f485f;
+
+    --clr-profile-bg: linear-gradient(var(--clr-bg-first) 0%, var(--clr-bg-second) 120%);
+    --clr-profile-line: #074151;
+}
+
+.theme-moon {
+    --clr-bg-first: #a8caba;
+    --clr-bg-second: #5d4157;
+    --clr-primary-bg: linear-gradient(to right, var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-header: #030303;
+
+    --clr-menu: #6a8176;
+    --clr-menu-cnt: #a8caba;
+    --clr-menu-btn: #54675e;
+    --clr-menu-input: #cde7db;
+    --clr-menu-border: #404944;
+
+    --clr-profile-bg: linear-gradient(var(--clr-bg-first) 0%, var(--clr-bg-second) 120%);
+    --clr-profile-line: #39383b;
 }

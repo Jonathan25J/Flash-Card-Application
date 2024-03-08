@@ -98,7 +98,7 @@ export class Modal extends LitElement {
             flex-direction: column;
             width: 70%;
             height: 70%;
-            border: 1.5rem solid var(--clr-bg-second);
+            border: 1.5rem solid var(--clr-menu-border);
             border-radius: 2rem;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
@@ -136,7 +136,7 @@ export class Modal extends LitElement {
         div.prompt button, form.basic button, button.exit, input[type="submit"] {
             appearance: button;
             backface-visibility: hidden;
-            background-color: var(--clr-bg-second);
+            background-color: var(--clr-menu-border);
             border-radius: 6px;
             border-width: 0;
             box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
