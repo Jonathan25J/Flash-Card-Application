@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit-element';
-import { Card } from '../../cards/card.js';
 import { profileController } from '../../operations/controllers/ProfileController.js';
+import { Card } from '../../pages/cards/card.js';
 import './card-element.js';
 export class CardsSwitcher extends LitElement {
 

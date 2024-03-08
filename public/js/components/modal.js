@@ -98,7 +98,7 @@ export class Modal extends LitElement {
             flex-direction: column;
             width: 70%;
             height: 70%;
-            border: 1.5rem solid var(--background-second-color);
+            border: 1.5rem solid var(--clr-menu-border);
             border-radius: 2rem;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
@@ -119,7 +119,7 @@ export class Modal extends LitElement {
             display: flex;
             align-items: center;
             justify-content: space-evenly;
-            background-color: #ededed;
+            background-color: var(--clr-menu);
         }
 
         .menu div {
@@ -136,7 +136,7 @@ export class Modal extends LitElement {
         div.prompt button, form.basic button, button.exit, input[type="submit"] {
             appearance: button;
             backface-visibility: hidden;
-            background-color: var(--background-second-color);
+            background-color: var(--clr-menu-border);
             border-radius: 6px;
             border-width: 0;
             box-shadow: rgba(50, 50, 93, .1) 0 0 0 1px inset,rgba(50, 50, 93, .1) 0 2px 5px 0,rgba(0, 0, 0, .07) 0 1px 1px 0;
@@ -183,12 +183,12 @@ export class Modal extends LitElement {
             justify-content: center;
             width: 100%; 
             height: 100%; 
-            background-color: white;
+            background-color: var(--clr-menu-cnt);
         }
 
         form.basic input:not([type="submit"]) {
             text-align: center;
-            background: #c9dcff;
+            background: var(--clr-menu-input);
             border: none;
             border-radius: 0.5rem;
             height: 2rem;
@@ -218,7 +218,7 @@ export class Modal extends LitElement {
             align-items: center;
             height: 100%;
             width: 100%;
-            background-color: white;
+            background-color: var(--clr-menu-cnt);
         }
 
         .prompt-container p {

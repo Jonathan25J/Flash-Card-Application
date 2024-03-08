@@ -1,11 +1,127 @@
 :root {
-    --background-first-color: #74ebd5;
-    --background-second-color: #9face6;
-    --background-image: linear-gradient(to right, var(--background-first-color) 0%, var(--background-second-color) 100%);
-    --foreground-color: white;
+    --clr-bg-first: #74ebd5;
+    --clr-bg-second: #9face6;
+    --clr-primary-bg: linear-gradient(to right, var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-header: white;
+
+    --clr-menu: #ededed;
+    --clr-menu-cnt: white;
+    --clr-menu-btn: #67a4ff;
+    --clr-menu-input: #c9dcff;
+    --clr-menu-border: var(--clr-bg-second);
+
+    --clr-profile-bg: linear-gradient(#74ebd5 0%, #94a3e9 85%);
+    --clr-profile-line: #627097;
 }
 
-body {
-    background-image: var(--background-image);
-    background-repeat: no-repeat;
+.theme-night-fade {
+    --clr-bg-first: #a18cd1;
+    --clr-bg-second: #fbc2eb;
+    --clr-primary-bg: linear-gradient(to top, var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-header: #674a61;
+
+    --clr-menu: #f5bae5;
+    --clr-menu-cnt: #ffd9f4;
+    --clr-menu-btn: #f5bae5;
+    --clr-menu-input: #ffc8f5;
+    --clr-menu-border: var(--clr-bg-second);
+
+    --clr-profile-bg: linear-gradient(rgb(246 191 234) 0%, rgb(169 144 211) 80%);
+    --clr-profile-line: #5c4965;
+}
+
+.theme-deep-blue {
+    --clr-bg-first: #e0c3fc;
+    --clr-bg-second: #8ec5fc;
+    --clr-primary-bg: linear-gradient(120deg, var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-header: #674a61;
+
+    --clr-menu: #9cc4eb;
+    --clr-menu-cnt: #b2d7fb;
+    --clr-menu-btn: #659dd5;
+    --clr-menu-input: #e7eef5;
+    --clr-menu-border: var(--clr-bg-second);
+
+    --clr-profile-bg: linear-gradient(var(--clr-bg-first) 0%, var(--clr-bg-second) 80%);
+    --clr-profile-line: #7b9ccf;
+}
+
+.theme-chrome {
+    --clr-bg-first: #00dbde;
+    --clr-bg-second: #fc00ff;
+    --clr-primary-bg: linear-gradient(to right, var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-header: #45276f;
+
+    --clr-menu: #56b4bb;
+    --clr-menu-cnt: #71c5cb;
+    --clr-menu-btn: #56b4bb;
+    --clr-menu-input: #5debed;
+    --clr-menu-border: #4b81d1;
+
+    --clr-profile-bg: linear-gradient(var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-profile-line: #533b8f;
+}
+
+.theme-dense-waters {
+    --clr-bg-first: #3ab5b0;
+    --clr-bg-second: #56317a;
+    --clr-primary-bg: linear-gradient(to right, var(--clr-bg-first) 0%, #3d99be 31%, var(--clr-bg-second) 100%);
+    --clr-header: #233651;
+
+    --clr-menu: #196d8f;
+    --clr-menu-cnt: #2690bb;
+    --clr-menu-btn: #05678f;
+    --clr-menu-input: #66c2e7;
+    --clr-menu-border: #0f485f;
+
+    --clr-profile-bg: linear-gradient(var(--clr-bg-first) 0%, var(--clr-bg-second) 120%);
+    --clr-profile-line: #074151;
+}
+
+.theme-moon {
+    --clr-bg-first: #a8caba;
+    --clr-bg-second: #5d4157;
+    --clr-primary-bg: linear-gradient(to right, var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-header: #353437;
+
+    --clr-menu: #6a8176;
+    --clr-menu-cnt: #a8caba;
+    --clr-menu-btn: #54675e;
+    --clr-menu-input: #cde7db;
+    --clr-menu-border: #404944;
+
+    --clr-profile-bg: linear-gradient(var(--clr-bg-first) 0%, var(--clr-bg-second) 120%);
+    --clr-profile-line: #39383b;
+}
+
+.theme-sun {
+    --clr-bg-first: #abecd6;
+    --clr-bg-second: #fbed96;
+    --clr-primary-bg: linear-gradient(60deg, var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-header: #777b55;
+
+    --clr-menu: #e3ddb5;
+    --clr-menu-cnt: #fff8cb;
+    --clr-menu-btn: #ffee7f;
+    --clr-menu-input: #ffffff;
+    --clr-menu-border: #d9cc78;
+
+    --clr-profile-bg: linear-gradient(var(--clr-bg-first) 0%, var(--clr-bg-second) 100%);
+    --clr-profile-line: #596147;
+}
+
+.theme-fresh {
+    --clr-bg-first: #feada6;
+    --clr-bg-second: #f5efef;
+    --clr-primary-bg: linear-gradient(to top, #feada6 0%, #f5efef 100%);
+    --clr-header: #8d6e6c;
+
+    --clr-menu: #e9c0bc;
+    --clr-menu-cnt: #efd9d7;
+    --clr-menu-btn: #e9c0bc;
+    --clr-menu-input: #ffedeb;
+    --clr-menu-border: var(--clr-bg-first);
+
+    --clr-profile-bg: linear-gradient(var(--clr-bg-second) 0%, var(--clr-bg-first) 100%);
+    --clr-profile-line: #b79390;
 }

@@ -74,7 +74,7 @@ export class Profile extends LitElement {
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            background-image: linear-gradient(to bottom, #ffffff 0%, #bdbdbd 80%);
+            background-image: var(--clr-profile-bg);
             border-radius: 2.5rem;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
         }
@@ -86,7 +86,7 @@ export class Profile extends LitElement {
         .line {
             width: 80%;
             height: 5%;
-            background-color: #5b5b5b;
+            background-color: var(--clr-profile-line);
             margin: 0.5rem;
             border-radius: 0.5rem;
         }
