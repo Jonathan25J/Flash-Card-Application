@@ -23,6 +23,7 @@ export class CardViewer extends LitElement {
         this.profileId = window.location.href.split('/')[4]
         this.index = 0
         this.revealed = false
+        this.revealButton = true
     }
 
     connectedCallback() {
@@ -33,6 +34,8 @@ export class CardViewer extends LitElement {
             if (this.cardsLength == -1) return
             this._sendInstructions(this.cards[this.index])
         })
+
+        window.addEventListener('keydown', this._buttonPressed.bind(this));
     }
 
     firstUpdated() {
@@ -41,6 +44,7 @@ export class CardViewer extends LitElement {
 
     disconnectedCallback() {
         super.disconnectedCallback();
+        window.removeEventListener('keydown', this._buttonPressed.bind(this));
     }
 
     updated() {
@@ -67,9 +71,11 @@ export class CardViewer extends LitElement {
         <a href="" @click="${this._previousCard}" style="visibility: ${this.index == 0 ? 'hidden' : ''}">
         <img src="/images/icons/left-btn.png" alt="Go to previous card">
         </a>
-        <a href="" @click="${this._revealAnswer}" ?hidden="${this.revealed}">
+        ${this.revealButton ? html`
+        <a href="" @click="${this._revealAnswer}" ?hidden="${this.revealed && this.revealButton}">
         <img src="/images/icons/reveal-btn.png" alt="Reveal answer">
         </a>
+        `: html``}
         <a href="" @click="${this._nextCard}" style="visibility: ${this.index == this.cardsLength ? 'hidden' : ''}">
         <img src="/images/icons/right-btn.png" alt="Go to next card">
         </a>
@@ -136,8 +142,8 @@ export class CardViewer extends LitElement {
 
         }
 
-
-        if (question && count == 1 || questionImage && count == 1 || question && questionImage && count == 2) this.revealed = true
+        this.revealed = (question && count == 1 || questionImage && count == 1 || question && questionImage && count == 2)
+        this.revealButton = !this.revealed
         let data = this.slots.map(slot => html`${slot}`)
         let container = html`<container-element instructions="${JSON.stringify(this.instructions)}">${data}</container-element>`
         this.card = container
@@ -174,6 +180,23 @@ export class CardViewer extends LitElement {
         this.index = this.index + 1
         this.revealed = false
         this._sendInstructions(this.cards[this.index])
+    }
+
+    _buttonPressed(e) {
+        switch (e.key) {
+            case 'ArrowLeft':
+                this._previousCard(e)
+                break;
+            case ' ':
+            case 'ArrowDown':
+                this._revealAnswer(e)
+                break;
+            case 'ArrowRight':
+                this._nextCard(e)
+                break;
+            default:
+                break;
+        }
     }
 
     _updateContainer() {
