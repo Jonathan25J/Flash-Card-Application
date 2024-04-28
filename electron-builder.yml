@@ -1,5 +1,7 @@
 appId: com.electron.flashcards
 productName: flash-cards application
+directories:
+  buildResources: build
 extraFiles:
   - resources/**
 files:
