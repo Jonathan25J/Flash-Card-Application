@@ -1,4 +1,4 @@
 node_modules
-out/
-resources/
-build/
+out
+resources
+dist
