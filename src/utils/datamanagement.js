@@ -75,7 +75,7 @@ class DataManagement {
                         JSON.parse(data);
                     } catch (err) {
                         console.error('Failed to read file:', err);
-                        this.#fixJsonFile(filePath)
+                        this.#repairJsonFile(filePath)
                         return callback(err);
                     }
 
@@ -124,7 +124,7 @@ class DataManagement {
     }
 
 
-    #fixJsonFile(filePath) {
+    #repairJsonFile(filePath) {
         let pathSplit = filePath.split('\\')
         let jsonName = pathSplit[pathSplit.length - 1].replace(".json", "")
         let jsonToWrite = {}
