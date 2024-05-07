@@ -1,15 +1,13 @@
 import { Router } from 'express';
-import fs from 'fs';
-import lockfile from 'proper-lockfile';
 import { v4 as uuidv4 } from 'uuid';
 import { dataManagement } from '../../utils/datamanagement.js';
 const router = Router()
 
 router.post('/', (req, res) => {
     const path = dataManagement.getProfilesPath()
-    readData(path, (err, dataToBeParsed) => {
+    dataManagement.readData(path, (err, dataToBeParsed) => {
         if (err) {
-            res.status(500).send('Error reading data');
+            res.status(400).send('Error reading data');
             return;
         }
         let data = JSON.parse(dataToBeParsed)
@@ -21,9 +19,9 @@ router.post('/', (req, res) => {
 
         }
         data.profiles.push(newProfile)
-        writeData(path, JSON.stringify(data, null, 2), (err) => {
+        dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
             if (err) {
-                res.status(500).send('Error writing data');
+                res.status(400).send('Error writing data');
                 return;
             }
             dataManagement.createProfileConfig(uuid)
@@ -36,9 +34,9 @@ router.get('/:uuid', (req, res) => {
     const profilesPath = dataManagement.getProfilesPath();
     const uuid = req.params.uuid;
 
-    readData(profilesPath, (err, dataToBeParsed) => {
+    dataManagement.readData(profilesPath, (err, dataToBeParsed) => {
         if (err) {
-            return res.status(500).send('Error reading data');
+            return res.status(400).send('Error reading data');
         }
 
         const profileData = JSON.parse(dataToBeParsed);
@@ -48,9 +46,9 @@ router.get('/:uuid', (req, res) => {
             return res.status(402).send('Profile not found');
         }
 
-        readData(dataManagement.getCardsPath(uuid), (err, cardsData) => {
+        dataManagement.readData(dataManagement.getCardsPath(uuid), (err, cardsData) => {
             if (err) {
-                return res.status(500).send('Error reading data');
+                return res.status(400).send('Error reading data');
             }
 
             try {
@@ -63,7 +61,7 @@ router.get('/:uuid', (req, res) => {
                 };
                 res.json(user);
             } catch (parseError) {
-                res.status(500).send('Error parsing JSON data');
+                res.status(400).send('Error parsing JSON data');
             }
 
 
@@ -74,9 +72,9 @@ router.get('/:uuid', (req, res) => {
 router.get('/', (req, res) => {
     const path = dataManagement.getProfilesPath()
 
-    readData(path, (err, data) => {
+    dataManagement.readData(path, (err, data) => {
         if (err) {
-            res.status(500).send('Error reading data');
+            res.status(400).send('Error reading data');
             return;
         }
 
@@ -96,9 +94,9 @@ router.get('/:uuid/practice', (req, res) => {
 router.post('/:uuid/cards', (req, res) => {
     const uuid = req.params.uuid
     const path = dataManagement.getCardsPath(uuid)
-    readData(path, (err, dataToBeParsed) => {
+    dataManagement.readData(path, (err, dataToBeParsed) => {
         if (err) {
-            res.status(500).send('Error reading data');
+            res.status(400).send('Error reading data');
             return;
         }
         let data = JSON.parse(dataToBeParsed)
@@ -121,9 +119,9 @@ router.post('/:uuid/cards', (req, res) => {
         if (answerImage.trim().length != 0) newCard['answerImage'] = dataManagement.writeImage(uuid, cardId, 'answer', answerImage)
 
         data.cards.push(newCard)
-        writeData(path, JSON.stringify(data, null, 2), (err) => {
+        dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
             if (err) {
-                res.status(500).send('Error writing data');
+                res.status(400).send('Error writing data');
                 return;
             }
 
@@ -135,9 +133,9 @@ router.post('/:uuid/cards', (req, res) => {
 router.patch('/', (req, res) => {
     const path = dataManagement.getProfilesPath()
 
-    readData(path, (err, dataToBeParsed) => {
+    dataManagement.readData(path, (err, dataToBeParsed) => {
         if (err) {
-            res.status(500).send('Error reading data');
+            res.status(400).send('Error reading data');
             return;
         }
         const updatedProfile = req.body
@@ -147,9 +145,9 @@ router.patch('/', (req, res) => {
         if (index !== -1) {
             data.profiles[index] = updatedProfile
 
-            writeData(path, JSON.stringify(data, null, 2), (err) => {
+            dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
-                    res.status(500).send('Error writing data');
+                    res.status(400).send('Error writing data');
                     return;
                 }
                 res.status(200).send('Profile is updated successfully');
@@ -166,7 +164,7 @@ router.patch('/:uuid/cards', (req, res) => {
     const uuid = req.params.uuid
     const path = dataManagement.getCardsPath(uuid)
 
-    readData(path, (err, dataToBeParsed) => {
+    dataManagement.readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
@@ -185,7 +183,7 @@ router.patch('/:uuid/cards', (req, res) => {
         if (index !== -1) {
             data.cards[index] = updatedCard
 
-            writeData(path, JSON.stringify(data, null, 2), (err) => {
+            dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
                     res.status(500).send('Error writing data');
                     return;
@@ -203,7 +201,7 @@ router.patch('/:uuid/cards', (req, res) => {
 router.delete('/:uuid', (req, res) => {
     const path = dataManagement.getProfilesPath()
 
-    readData(path, (err, dataToBeParsed) => {
+    dataManagement.readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
@@ -215,7 +213,7 @@ router.delete('/:uuid', (req, res) => {
         if (index !== -1) {
             data.profiles.splice(index, 1);
 
-            writeData(path, JSON.stringify(data, null, 2), (err) => {
+            dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
                     res.status(500).send('Error writing data');
                     return;
@@ -237,7 +235,7 @@ router.delete('/:uuid/cards/:cardId', (req, res) => {
     const cardId = req.params.cardId;
     const path = dataManagement.getCardsPath(uuid)
 
-    readData(path, (err, dataToBeParsed) => {
+    dataManagement.readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
@@ -249,7 +247,7 @@ router.delete('/:uuid/cards/:cardId', (req, res) => {
         if (index !== -1) {
             data.cards.splice(index, 1);
 
-            writeData(path, JSON.stringify(data, null, 2), (err) => {
+            dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
                     res.status(500).send('Error writing data');
                     return;
@@ -266,54 +264,6 @@ router.delete('/:uuid/cards/:cardId', (req, res) => {
     })
 })
 
-function readData(filePath, callback) {
-    lockfile.lock(filePath, { retries: { retries: 5, minTimeout: 100 } })
-        .then((release) => {
-            fs.readFile(filePath, (err, data) => {
-                release((releaseErr) => {
-                    if (releaseErr) {
-                        console.error('Failed to release the lock:', releaseErr);
-                        return callback(releaseErr);
-                    }
-                });
 
-                if (err) {
-                    console.error('Failed to read file:', err);
-                    return callback(err);
-                }
-                
-                callback(null, data);
-            });
-        })
-        .catch((err) => {
-            console.error('Failed to acquire the lock:', err);
-            callback(err);
-        });
-}
-
-function writeData(filePath, data, callback) {
-    lockfile.lock(filePath, { retries: { retries: 5, minTimeout: 100 } })
-        .then((release) => {
-            fs.writeFile(filePath, data, (err) => {
-                release((releaseErr) => {
-                    if (releaseErr) {
-                        console.error('Failed to release the lock:', releaseErr);
-                        return callback(releaseErr);
-                    }
-                });
-
-                if (err) {
-                    console.error('Failed to write file:', err);
-                    return callback(err);
-                }
-
-                callback(null);
-            });
-        })
-        .catch((err) => {
-            console.error('Failed to acquire the lock:', err);
-            callback(err);
-        });
-}
 
 export default router
