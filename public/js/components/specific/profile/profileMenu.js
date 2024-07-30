@@ -1,6 +1,6 @@
 import { LitElement, css, html } from 'lit-element';
 import { profileController } from '../../../controllers/ProfileController.js';
-import { updatePage } from '../../../utils/operations.js';
+import { updatePage } from '../../../utils/globalOperations.js';
 import '../../global/modal.js';
 export class ProfileMenu extends LitElement {
 

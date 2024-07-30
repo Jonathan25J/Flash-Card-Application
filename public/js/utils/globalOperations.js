@@ -1,4 +1,5 @@
 import { PORT } from '../../../src/utils/port.js';
+
 const updatePage = () => {
   const htmlElements = document.querySelectorAll('*')
   htmlElements.forEach(element => {

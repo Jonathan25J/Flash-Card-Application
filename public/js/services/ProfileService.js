@@ -25,20 +25,6 @@ class ProfileService {
         return await requestManager.doFetch(`/profile/${uuid}`, 'DELETE', undefined, false)
     }
 
-    addCard = async (uuid, body) => {
-        return await requestManager.doFetch(`/profile/${uuid}/cards`, 'POST', body, false)
-
-    }
-
-    deleteCard = async (uuid, cardId) => {
-        return await requestManager.doFetch(`/profile/${uuid}/cards/${cardId}`, 'DELETE', undefined, false)
-    }
-
-    updateCard = async (uuid, body) => {
-        return await requestManager.doFetch(`/profile/${uuid}/cards`, 'PATCH', body, false)
-
-    }
-
 }
 
 export const profileService = new ProfileService();

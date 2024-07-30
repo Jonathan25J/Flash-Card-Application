@@ -1,4 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
+import { cardController } from '../../../controllers/CardController.js';
 import { profileController } from '../../../controllers/ProfileController.js';
 import { Card } from '../../../pages/cards/card.js';
 import './card-element.js';
@@ -96,13 +97,13 @@ export class CardsSwitcher extends LitElement {
     }
 
     _addCard() {
-        profileController.addCard(this.profileId, this.currentCard).then(() => {
+        cardController.addCard(this.profileId, this.currentCard).then(() => {
             this._retrieveCards()
         })
     }
 
     _updateCard() {
-        profileController.updateCard(this.profileId, this.currentCard).then(() => {
+        cardController.updateCard(this.profileId, this.currentCard).then(() => {
             this._retrieveCards()
         })
     }
@@ -119,7 +120,7 @@ export class CardsSwitcher extends LitElement {
         e.preventDefault()
         this.currentCard = this.cardElement.retrieve()
         if (this.currentCard.id == '') return
-        profileController.deleteCard(this.profileId, this.currentCard.id).then(() => {
+        cardController.deleteCard(this.profileId, this.currentCard.id).then(() => {
             this._refresh()
             this.cardElement.clear()
         })
