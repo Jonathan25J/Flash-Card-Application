@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
-import { Card } from '../../../pages/cards/card.js';
+import { Card } from '../../../pages/js/cards/card.js';
 export class CardElement extends LitElement {
 
     static get properties() {

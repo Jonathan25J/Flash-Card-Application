@@ -1,4 +1,4 @@
-import { PORT } from '../../../src/utils/port.js';
+import { PORT } from './port.js';
 
 const updatePage = () => {
   const htmlElements = document.querySelectorAll('*')

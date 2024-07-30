@@ -1,4 +1,4 @@
-import { PORT } from '../../../src/utils/port.js';
+import { PORT } from '../utils/port.js';
 const backendURL = `http://localhost:${PORT}`
 
 class RequestManager {
