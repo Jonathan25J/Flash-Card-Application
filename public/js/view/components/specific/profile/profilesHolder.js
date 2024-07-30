@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
-import { profileController } from '../../../controllers/ProfileController.js';
+import { profileController } from '../../../../controller/ProfileController.js';
 import '../../global/modal.js';
 import './profile.js';
 export class ProfilesHolder extends LitElement {

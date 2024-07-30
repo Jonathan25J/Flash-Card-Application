@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
-import { profileController } from '../../../controllers/ProfileController.js';
+import { profileController } from '../../../../controller/ProfileController.js';
 import '../../global/container.js';
 import '../../global/modal.js';
 export class CardViewer extends LitElement {

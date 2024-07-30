@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
-import { PORT } from '../../../../src/utils/port.js';
+import { PORT } from '../../../../../src/utils/port.js';
 export class ThemeSwitcher extends LitElement {
 
     static get properties() {
