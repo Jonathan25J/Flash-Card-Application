@@ -1,9 +1,10 @@
 {
-    "editor.defaultFormatter": null,
+    "editor.defaultFormatter": "mgmcdermott.vscode-language-babel",
     "[javascript]": {
         "editor.defaultFormatter": "vscode.typescript-language-features"
       },
       "cSpell.words": [
         "USERDATAPATH"
-      ]
+      ],
+      "docker.languageserver.formatter.ignoreMultilineInstructions": true
 }

@@ -1,50 +1,8 @@
 import fs from 'fs';
-import fse from 'fs-extra';
 import path from 'path';
 import lockfile from 'proper-lockfile';
-import { rimraf } from 'rimraf';
-import { USERDATAPATH } from './electron.js';
-class DataManagement {
-    constructor() {
-        this.#checkPaths()
-    }
-
-    getProfilesPath() {
-        return path.join(USERDATAPATH, 'data/profiles/profiles.json');
-    }
-
-    createProfileConfig(uuid) {
-        let profilePath = path.join(USERDATAPATH, `data/profiles/${uuid}/cards/cards.json`)
-        fse.ensureFile(profilePath).then(() => {
-            const defaultJson = {
-                "cards": []
-            }
-            fs.writeFileSync(profilePath, JSON.stringify(defaultJson, null, 2))
-        })
-    }
-
-    removeProfileConfig(uuid) {
-        let profilePath = path.join(USERDATAPATH, `data/profiles/${uuid}`)
-        fse.ensureDir(profilePath).then(() => {
-            rimraf(profilePath)
-        })
-    }
-
-    removeCardConfig(uuid, cardUuid) {
-        let cardPath = path.join(USERDATAPATH, `data/profiles/${uuid}/cards/${cardUuid}`)
-        fse.ensureDir(cardPath).then(() => {
-            rimraf(cardPath)
-        })
-    }
-
-    getCardsPath(uuid) {
-        return path.join(USERDATAPATH, `data/profiles/${uuid}/cards/cards.json`);
-    }
-
-    createCardConfig(uuid, cardUuid) {
-        let cardPath = path.join(USERDATAPATH, `data/profiles/${uuid}/cards/${cardUuid}/images`)
-        fse.ensureDirSync(cardPath)
-    }
+import { USERDATAPATH } from '../../../utils/electron.js';
+class IOService {
 
     writeImage(uuid, cardUuid, name, image) {
         const type = image.split(';')[0].split(':')[1].split('/')[1]
@@ -113,16 +71,6 @@ class DataManagement {
             });
     }
 
-    getFolderFromFilePath(filePath) {
-        let pathSplit = filePath.split('\\')
-        return filePath.replace(pathSplit[pathSplit.length - 1], "")
-    }
-
-    getDirectoriesFromFolder(folder) {
-        return fs.readdirSync(folder, { withFileTypes: true })
-            .filter(dirent => dirent.isDirectory())
-    }
-
 
     #repairJsonFile(filePath) {
         let pathSplit = filePath.split('\\')
@@ -135,24 +83,14 @@ class DataManagement {
                     id: directory.name,
                     title: "undefined",
                     description: "undefined"
-        
+
                 })
             })
         }
         fs.writeFileSync(filePath, JSON.stringify(jsonToWrite, null, 2))
     }
 
-    #checkPaths() {
-        let path = this.getProfilesPath();
-        if (!fs.existsSync(path))
-            fse.ensureFile(path).then(() => {
-                const defaultJson = {
-                    "profiles": []
-                }
-                fs.writeFileSync(path, JSON.stringify(defaultJson, null, 2))
-            })
-    }
 }
-const dataManagement = new DataManagement();
-export { dataManagement };
+const ioService = new IOService();
+export { ioService };
 

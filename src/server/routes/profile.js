@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { dataManagement } from '../../utils/datamanagement.js';
+// import { dataManagement } from '../../utils/datamanagement.js';
+import { configurationService, ioService, pathService } from '../services/data/dataServices.js';
 const router = Router()
 
 router.post('/', (req, res) => {
-    const path = dataManagement.getProfilesPath()
-    dataManagement.readData(path, (err, dataToBeParsed) => {
+    const path = pathService.getProfilesPath()
+    ioService.readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(400).send('Error reading data');
             return;
@@ -19,22 +20,22 @@ router.post('/', (req, res) => {
 
         }
         data.profiles.push(newProfile)
-        dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
+        ioService.writeData(path, JSON.stringify(data, null, 2), (err) => {
             if (err) {
                 res.status(400).send('Error writing data');
                 return;
             }
-            dataManagement.createProfileConfig(uuid)
+            configurationService.createProfileConfig(uuid)
             res.json(uuid);
         })
     })
 })
 
 router.get('/:uuid', (req, res) => {
-    const profilesPath = dataManagement.getProfilesPath();
+    const profilesPath = pathService.getProfilesPath();
     const uuid = req.params.uuid;
 
-    dataManagement.readData(profilesPath, (err, dataToBeParsed) => {
+    ioService.readData(profilesPath, (err, dataToBeParsed) => {
         if (err) {
             return res.status(400).send('Error reading data');
         }
@@ -46,7 +47,7 @@ router.get('/:uuid', (req, res) => {
             return res.status(402).send('Profile not found');
         }
 
-        dataManagement.readData(dataManagement.getCardsPath(uuid), (err, cardsData) => {
+        ioService.readData(pathService.getCardsPath(uuid), (err, cardsData) => {
             if (err) {
                 return res.status(400).send('Error reading data');
             }
@@ -70,9 +71,9 @@ router.get('/:uuid', (req, res) => {
 })
 
 router.get('/', (req, res) => {
-    const path = dataManagement.getProfilesPath()
+    const path = pathService.getProfilesPath()
 
-    dataManagement.readData(path, (err, data) => {
+    ioService.readData(path, (err, data) => {
         if (err) {
             res.status(400).send('Error reading data');
             return;
@@ -93,8 +94,8 @@ router.get('/:uuid/practice', (req, res) => {
 
 router.post('/:uuid/cards', (req, res) => {
     const uuid = req.params.uuid
-    const path = dataManagement.getCardsPath(uuid)
-    dataManagement.readData(path, (err, dataToBeParsed) => {
+    const path = pathService.getCardsPath(uuid)
+    ioService.readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(400).send('Error reading data');
             return;
@@ -113,13 +114,13 @@ router.post('/:uuid/cards', (req, res) => {
             answerImage: answerImage
         }
 
-        dataManagement.createCardConfig(uuid, cardId)
+        configurationService.createCardConfig(uuid, cardId)
 
-        if (questionImage.trim().length != 0) newCard['questionImage'] = dataManagement.writeImage(uuid, cardId, 'question', questionImage)
-        if (answerImage.trim().length != 0) newCard['answerImage'] = dataManagement.writeImage(uuid, cardId, 'answer', answerImage)
+        if (questionImage.trim().length != 0) newCard['questionImage'] = ioService.writeImage(uuid, cardId, 'question', questionImage)
+        if (answerImage.trim().length != 0) newCard['answerImage'] = ioService.writeImage(uuid, cardId, 'answer', answerImage)
 
         data.cards.push(newCard)
-        dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
+        ioService.writeData(path, JSON.stringify(data, null, 2), (err) => {
             if (err) {
                 res.status(400).send('Error writing data');
                 return;
@@ -131,9 +132,9 @@ router.post('/:uuid/cards', (req, res) => {
 })
 
 router.patch('/', (req, res) => {
-    const path = dataManagement.getProfilesPath()
+    const path = pathService.getProfilesPath()
 
-    dataManagement.readData(path, (err, dataToBeParsed) => {
+    ioService.readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(400).send('Error reading data');
             return;
@@ -145,7 +146,7 @@ router.patch('/', (req, res) => {
         if (index !== -1) {
             data.profiles[index] = updatedProfile
 
-            dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
+            ioService.writeData(path, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
                     res.status(400).send('Error writing data');
                     return;
@@ -162,9 +163,9 @@ router.patch('/', (req, res) => {
 
 router.patch('/:uuid/cards', (req, res) => {
     const uuid = req.params.uuid
-    const path = dataManagement.getCardsPath(uuid)
+    const path = pathService.getCardsPath(uuid)
 
-    dataManagement.readData(path, (err, dataToBeParsed) => {
+    ioService.readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
@@ -174,8 +175,8 @@ router.patch('/:uuid/cards', (req, res) => {
         const questionImage = updatedCard.questionImage
         const answerImage = updatedCard.answerImage
 
-        if (questionImage.startsWith('data:')) updatedCard['questionImage'] = dataManagement.writeImage(uuid, cardId, 'question', questionImage)
-        if (answerImage.startsWith('data:')) updatedCard['answerImage'] = dataManagement.writeImage(uuid, cardId, 'answer', answerImage)
+        if (questionImage.startsWith('data:')) updatedCard['questionImage'] = ioService.writeImage(uuid, cardId, 'question', questionImage)
+        if (answerImage.startsWith('data:')) updatedCard['answerImage'] = ioService.writeImage(uuid, cardId, 'answer', answerImage)
 
         const data = JSON.parse(dataToBeParsed)
         const index = data.cards.findIndex(card => card.id === updatedCard.id);
@@ -183,7 +184,7 @@ router.patch('/:uuid/cards', (req, res) => {
         if (index !== -1) {
             data.cards[index] = updatedCard
 
-            dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
+            ioService.writeData(path, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
                     res.status(500).send('Error writing data');
                     return;
@@ -199,9 +200,9 @@ router.patch('/:uuid/cards', (req, res) => {
 })
 
 router.delete('/:uuid', (req, res) => {
-    const path = dataManagement.getProfilesPath()
+    const path = pathService.getProfilesPath()
 
-    dataManagement.readData(path, (err, dataToBeParsed) => {
+    ioService.readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
@@ -213,13 +214,13 @@ router.delete('/:uuid', (req, res) => {
         if (index !== -1) {
             data.profiles.splice(index, 1);
 
-            dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
+            ioService.writeData(path, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
                     res.status(500).send('Error writing data');
                     return;
                 }
 
-                dataManagement.removeProfileConfig(uuid)
+                configurationService.removeProfileConfig(uuid)
                 res.status(200).send('Profile is successfully removed');
             })
 
@@ -233,9 +234,9 @@ router.delete('/:uuid', (req, res) => {
 router.delete('/:uuid/cards/:cardId', (req, res) => {
     const uuid = req.params.uuid
     const cardId = req.params.cardId;
-    const path = dataManagement.getCardsPath(uuid)
+    const path = pathService.getCardsPath(uuid)
 
-    dataManagement.readData(path, (err, dataToBeParsed) => {
+    ioService.readData(path, (err, dataToBeParsed) => {
         if (err) {
             res.status(500).send('Error reading data');
             return;
@@ -247,13 +248,13 @@ router.delete('/:uuid/cards/:cardId', (req, res) => {
         if (index !== -1) {
             data.cards.splice(index, 1);
 
-            dataManagement.writeData(path, JSON.stringify(data, null, 2), (err) => {
+            ioService.writeData(path, JSON.stringify(data, null, 2), (err) => {
                 if (err) {
                     res.status(500).send('Error writing data');
                     return;
                 }
 
-                dataManagement.removeCardConfig(uuid, cardId)
+                configurationService.removeCardConfig(uuid, cardId)
                 res.status(200).send('Card is successfully removed');
             })
 
