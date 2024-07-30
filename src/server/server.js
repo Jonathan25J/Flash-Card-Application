@@ -25,8 +25,8 @@ app.use(express.static(path.join(USERDATAPATH, 'data')));
 app.set('view engine', 'html');
 app.engine('html', ejs.renderFile);
 
-import profileRouter from "./routes/profile.js";
-import rootRouter from "./routes/root.js";
+import rootRouter from "./routes/index.js";
+import profileRouter from "./routes/profile/profile.js";
 
 app.use("/", rootRouter)
 app.use("/profile", profileRouter)
