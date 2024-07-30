@@ -1,7 +1,7 @@
 import { LitElement, css, html } from 'lit-element';
-import { profileController } from '../../operations/controllers/ProfileController.js';
-import '../container.js';
-import '../modal.js';
+import { profileController } from '../../../controllers/ProfileController.js';
+import '../../global/container.js';
+import '../../global/modal.js';
 export class CardViewer extends LitElement {
 
     static get properties() {

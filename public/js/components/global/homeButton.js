@@ -1,5 +1,5 @@
 import { LitElement, css, html } from 'lit-element';
-import { updatePage } from '../utils/operations.js';
+import { updatePage } from '../../utils/operations.js';
 export class HomeButton extends LitElement {
 
     static get properties() {
