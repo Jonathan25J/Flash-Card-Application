@@ -9,7 +9,7 @@ import css from "rollup-plugin-import-css";
 const copy = pkg;
 
 export default {
-    input: 'public/views/*.html',
+    input: 'src/view/pages/html/*.html',
     plugins: [
         // Entry point for application build; can specify a glob to build multiple
         // HTML files for non-SPA app

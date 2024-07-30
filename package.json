@@ -1,6 +1,6 @@
 {
   "name": "flash-cards-application",
-  "version": "1.3.4",
+  "version": "1.3.5",
   "author": "Jonaqhan",
   "description": "Flash Cards Application that can be used for learning",
   "main": "src/main.js",
