@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { configurationService, ioService, pathService } from '../../services/data/dataServices.js';
-const router = Router()
+const router = Router({ mergeParams: true })
 
 router.get('/', (req, res) => {
     res.render('cards.html')
