@@ -84,7 +84,7 @@ router.patch('/', (req, res) => {
     })
 })
 
-router.delete('/', (req, res) => {
+router.delete('/:cardId', (req, res) => {
     const uuid = req.params.uuid
     const cardId = req.params.cardId;
     const path = pathService.getCardsPath(uuid)
