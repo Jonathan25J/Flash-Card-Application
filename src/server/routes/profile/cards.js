@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { configurationService, ioService, pathService } from '../../services/data/dataServices.js';
-const router = Router()
+const router = Router({ mergeParams: true })
 
 router.get('/', (req, res) => {
     res.render('cards.html')
@@ -84,7 +84,7 @@ router.patch('/', (req, res) => {
     })
 })
 
-router.delete('/', (req, res) => {
+router.delete('/:cardId', (req, res) => {
     const uuid = req.params.uuid
     const cardId = req.params.cardId;
     const path = pathService.getCardsPath(uuid)

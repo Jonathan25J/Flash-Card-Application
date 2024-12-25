@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import lockfile from 'proper-lockfile';
 import { USERDATAPATH } from '../../../utils/electron.js';
+import { pathService } from './pathService.js';
 class IOService {
 
     writeImage(uuid, cardUuid, name, image) {
@@ -78,7 +79,7 @@ class IOService {
         let jsonToWrite = {}
         jsonToWrite[jsonName] = []
         if (jsonName == "profiles") {
-            this.getDirectoriesFromFolder(this.getFolderFromFilePath(filePath)).forEach(directory => {
+            pathService.getDirectoriesFromFolder(pathService.getFolderFromFilePath(filePath)).forEach(directory => {
                 jsonToWrite.profiles.push({
                     id: directory.name,
                     title: "undefined",
