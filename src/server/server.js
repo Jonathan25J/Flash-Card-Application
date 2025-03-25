@@ -4,6 +4,7 @@ import expressWs from 'express-ws';
 import path from 'path';
 import { USERDATAPATH } from '../utils/electron.js';
 import { PORT } from '../utils/port.js';
+import { pathService } from './services/data/pathService.js';
 import storeWs from './sockets/store.js';
 
 const app = express()
@@ -34,5 +35,7 @@ app.use("/profile", profileRouter)
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 })
+
+pathService.initializeProfilesPathIfNeeded();
 
 export default app;

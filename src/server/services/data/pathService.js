@@ -1,4 +1,5 @@
 import fs from 'fs';
+import fse from 'fs-extra';
 import path from 'path';
 import { USERDATAPATH } from '../../../utils/electron.js';
 
@@ -22,6 +23,16 @@ class PathService {
             .filter(dirent => dirent.isDirectory())
     }
 
+    initializeProfilesPathIfNeeded() {
+        let path = this.getProfilesPath();
+        if (!fs.existsSync(path))
+            fse.ensureFile(path).then(() => {
+                const defaultJson = {
+                    "profiles": []
+                }
+                fs.writeFileSync(path, JSON.stringify(defaultJson, null, 2))
+            })
+    }
 }
 const pathService = new PathService();
 export { pathService };
